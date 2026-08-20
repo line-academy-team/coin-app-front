@@ -1,4 +1,12 @@
-import { ActivityIndicator, FlatList, Pressable, Text, TextInput, View } from "react-native";
+import {
+    ActivityIndicator,
+    FlatList,
+    Image,
+    Pressable,
+    Text,
+    TextInput,
+    View,
+} from "react-native";
 import { Href, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useMemo, useState } from "react";
@@ -6,6 +14,62 @@ import { useEffect, useMemo, useState } from "react";
 import { getCoins } from "@/api/coin";
 import { Coin } from "@/types/coin";
 import MainHeader from "@/components/layout/MainHeader";
+
+interface CoinIconProps {
+    symbol: string;
+}
+
+function CoinIcon({ symbol }: CoinIconProps) {
+    const [hasError, setHasError] = useState(false);
+
+    const upperSymbol = symbol.toUpperCase();
+
+    const iconUrl = `https://static.upbit.com/logos/${upperSymbol}.png`;
+
+    return (
+        <View
+            className="
+                mr-3
+                h-10
+                w-10
+                items-center
+                justify-center
+            ">
+            {!hasError ? (
+                <Image
+                    source={{
+                        uri: iconUrl,
+                    }}
+                    style={{
+                        width: 40,
+                        height: 40,
+                    }}
+                    resizeMode="contain"
+                    onError={() => setHasError(true)}
+                />
+            ) : (
+                <View
+                    className="
+                        h-10
+                        w-10
+                        items-center
+                        justify-center
+                        rounded-full
+                        bg-secondary-main
+                    ">
+                    <Text
+                        className="
+                            text-xs
+                            text-text-light
+                            font-pretendard-bold
+                        ">
+                        {upperSymbol.charAt(0)}
+                    </Text>
+                </View>
+            )}
+        </View>
+    );
+}
 
 export default function CoinPage() {
     const [coinList, setCoinList] = useState<Coin[]>([]);
@@ -77,7 +141,11 @@ export default function CoinPage() {
                         bg-background-paper
                         px-4
                     ">
-                    <Ionicons name="search-outline" size={20} color="#9CA3AF" />
+                    <Ionicons
+                        name="search-outline"
+                        size={20}
+                        color="#9CA3AF"
+                    />
 
                     <TextInput
                         value={keyword}
@@ -97,7 +165,11 @@ export default function CoinPage() {
 
                     {keyword.length > 0 && (
                         <Pressable onPress={() => setKeyword("")}>
-                            <Ionicons name="close-circle" size={19} color="#9CA3AF" />
+                            <Ionicons
+                                name="close-circle"
+                                size={19}
+                                color="#9CA3AF"
+                            />
                         </Pressable>
                     )}
                 </View>
@@ -109,7 +181,10 @@ export default function CoinPage() {
             {/* 로딩 */}
             {isLoading && (
                 <View className="flex-1 items-center justify-center">
-                    <ActivityIndicator size="large" color="#2288ED" />
+                    <ActivityIndicator
+                        size="large"
+                        color="#2288ED"
+                    />
 
                     <Text
                         className="
@@ -126,7 +201,11 @@ export default function CoinPage() {
             {/* 에러 */}
             {!isLoading && error && (
                 <View className="flex-1 items-center justify-center px-5">
-                    <Ionicons name="alert-circle-outline" size={36} color="#EF4444" />
+                    <Ionicons
+                        name="alert-circle-outline"
+                        size={36}
+                        color="#EF4444"
+                    />
 
                     <Text
                         className="
@@ -153,7 +232,11 @@ export default function CoinPage() {
                     }}
                     ListEmptyComponent={
                         <View className="items-center py-20">
-                            <Ionicons name="search-outline" size={34} color="#9CA3AF" />
+                            <Ionicons
+                                name="search-outline"
+                                size={34}
+                                color="#9CA3AF"
+                            />
 
                             <Text
                                 className="
@@ -179,25 +262,7 @@ export default function CoinPage() {
                                 py-3
                             ">
                             {/* 코인 아이콘 */}
-                            <View
-                                className="
-                                    mr-3
-                                    h-10
-                                    w-10
-                                    items-center
-                                    justify-center
-                                    rounded-full
-                                    bg-secondary-main
-                                ">
-                                <Text
-                                    className="
-                                        text-xs
-                                        text-text-light
-                                        font-pretendard-bold
-                                    ">
-                                    {item.symbol.charAt(0)}
-                                </Text>
-                            </View>
+                            <CoinIcon symbol={item.symbol} />
 
                             {/* 코인명 */}
                             <View className="flex-1">
@@ -241,8 +306,8 @@ export default function CoinPage() {
                                         item.changeRate > 0
                                             ? "text-xs text-success-main font-pretendard-medium"
                                             : item.changeRate < 0
-                                              ? "text-xs text-error-main font-pretendard-medium"
-                                              : "text-xs text-text-secondary font-pretendard-medium"
+                                                ? "text-xs text-error-main font-pretendard-medium"
+                                                : "text-xs text-text-secondary font-pretendard-medium"
                                     }>
                                     {getChangeRateText(item.changeRate)}
                                 </Text>

@@ -1,4 +1,4 @@
-import { ActivityIndicator, Pressable, ScrollView, Text, View } from "react-native";
+import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from "react-native";
 
 import { useCallback, useState } from "react";
 
@@ -11,12 +11,68 @@ import { getCoin, getCoinTicker } from "@/api/coin";
 import { CoinDetail, RealtimePricePoint } from "@/types/coin";
 
 import CoinInfo from "@/components/coin/CoinInfo";
-
 import CoinChart from "@/components/coin/CoinChart";
 import Button from "@/components/common/button/Button";
-import { twMerge } from "tailwind-merge";
 
 type TabType = "info" | "chart";
+
+interface CoinIconProps {
+    symbol: string;
+}
+
+/**
+ * 코인 아이콘
+ */
+function CoinIcon({ symbol }: CoinIconProps) {
+    const [hasError, setHasError] = useState(false);
+
+    const upperSymbol = symbol.toUpperCase();
+
+    const iconUrl = `https://static.upbit.com/logos/${upperSymbol}.png`;
+
+    return (
+        <View
+            className="
+                h-14
+                w-14
+                items-center
+                justify-center
+            ">
+            {!hasError ? (
+                <Image
+                    source={{
+                        uri: iconUrl,
+                    }}
+                    style={{
+                        width: 56,
+                        height: 56,
+                    }}
+                    resizeMode="contain"
+                    onError={() => setHasError(true)}
+                />
+            ) : (
+                <View
+                    className="
+                        h-14
+                        w-14
+                        items-center
+                        justify-center
+                        rounded-full
+                        bg-secondary-main
+                    ">
+                    <Text
+                        className="
+                            text-xl
+                            text-text-light
+                            font-pretendard-bold
+                        ">
+                        {upperSymbol.charAt(0)}
+                    </Text>
+                </View>
+            )}
+        </View>
+    );
+}
 
 /**
  * 원화 표시
@@ -344,7 +400,7 @@ export default function CoinDetailPage() {
                     ">
                     <Text
                         className="
-                            font-bold
+                            font-pretendard-bold
                             text-text-light
                         ">
                         돌아가기
@@ -400,9 +456,9 @@ export default function CoinDetailPage() {
 
             <View
                 className="
+                    h-[80px]
                     flex-row
                     items-center
-                    h-[80px]
                     px-6
                 ">
                 <Pressable
@@ -470,40 +526,20 @@ export default function CoinDetailPage() {
                     pt-2
                 ">
                 {/* 코인 아이콘 */}
-
-                <View
-                    className="
-                        h-14
-                        w-14
-                        items-center
-                        justify-center
-                        rounded-full
-                        bg-warning-main
-                    ">
-                    <Text
-                        className="
-                            text-2xl
-                            text-text-light
-                            font-pretendard-bold
-                        ">
-                        {coin.symbol === "BTC" ? "₿" : coin.symbol.charAt(0)}
-                    </Text>
-                </View>
+                <CoinIcon symbol={coin.symbol} />
 
                 {/* 1초마다 바뀌는 현재가 */}
-
                 <Text
                     className="
                         mt-4
                         text-2xl
-                        font-pretendard-bold
                         text-text-default
+                        font-pretendard-bold
                     ">
                     {formatKRW(coin.price)}
                 </Text>
 
                 {/* 전일 대비 */}
-
                 <Text
                     className={`
                         mt-1
@@ -522,8 +558,6 @@ export default function CoinDetailPage() {
                     {")"}
                 </Text>
 
-                {/* 실시간 표시 */}
-
                 <View
                     className="
                         mt-2
@@ -535,8 +569,8 @@ export default function CoinDetailPage() {
                     <Text
                         className="
                             text-[10px]
-                            font-pretendard-bold
                             text-primary-main
+                            font-pretendard-bold
                         ">
                         LIVE · 1초마다 갱신
                     </Text>
@@ -544,7 +578,7 @@ export default function CoinDetailPage() {
             </View>
 
             {/* ========================== */}
-            {/* 정보 / 차트 */}
+            {/* 탭 */}
             {/* ========================== */}
 
             <View
@@ -555,7 +589,6 @@ export default function CoinDetailPage() {
                     px-5
                 ">
                 {/* 정보 */}
-
                 <Pressable
                     onPress={() => setSelectedTab("info")}
                     className="
@@ -566,8 +599,8 @@ export default function CoinDetailPage() {
                     <Text
                         className={
                             selectedTab === "info"
-                                ? "font-pretendard-bold text-primary-main text-base"
-                                : "font-pretendard-medium text-text-secondary text-base"
+                                ? "text-base text-primary-main font-pretendard-bold"
+                                : "text-base text-text-secondary font-pretendard-medium"
                         }>
                         정보
                     </Text>
@@ -586,7 +619,6 @@ export default function CoinDetailPage() {
                 </Pressable>
 
                 {/* 차트 */}
-
                 <Pressable
                     onPress={() => setSelectedTab("chart")}
                     className="
@@ -597,8 +629,8 @@ export default function CoinDetailPage() {
                     <Text
                         className={
                             selectedTab === "chart"
-                                ? "font-pretendard-bold text-primary-main text-base"
-                                : "font-pretendard-medium text-text-secondary text-base"
+                                ? "text-base text-primary-main font-pretendard-bold"
+                                : "text-base text-text-secondary font-pretendard-medium"
                         }>
                         차트
                     </Text>
@@ -618,27 +650,21 @@ export default function CoinDetailPage() {
             </View>
 
             {/* ========================== */}
-            {/* 탭 내용 */}
+            {/* 내용 */}
             {/* ========================== */}
 
             <ScrollView
-                className="
-                    flex-1
-                "
+                className="flex-1"
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{
                     paddingHorizontal: 20,
-
                     paddingTop: 14,
-
                     paddingBottom: 20,
                 }}>
                 {/* 정보 */}
-
                 {selectedTab === "info" && <CoinInfo coin={coin} realtimeData={realtimeData} />}
 
                 {/* 차트 */}
-
                 {selectedTab === "chart" && <CoinChart coin={coin} realtimeData={realtimeData} />}
             </ScrollView>
 
@@ -649,21 +675,23 @@ export default function CoinDetailPage() {
             <View
                 className="
                     flex-row
+                    gap-[10px]
                     bg-background-paper
                     px-5
                     pb-5
                     pt-3
-                    gap-[10px]
                 ">
+                <View className="flex-1">
+                    <Button variant="outline" onPress={() => setIsFavorite(previous => !previous)}>
+                        {isFavorite ? "관심코인 해제" : "관심코인"}
+                    </Button>
+                </View>
 
-                <Button variant={"outline"} onPress={() => setIsFavorite(previous => !previous)}>
-                    {isFavorite ? "관심코인 해제" : "관심코인"}
-                </Button>
-
-                <Button variant={"solid"} color={"primary"} onPress={handlePortfolioPress} >
-                    포트폴리오에 추가
-                </Button>
-
+                <View className="flex-1">
+                    <Button variant="solid" color="primary" onPress={handlePortfolioPress}>
+                        포트폴리오에 추가
+                    </Button>
+                </View>
             </View>
         </View>
     );
