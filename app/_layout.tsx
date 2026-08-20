@@ -10,7 +10,7 @@ import { useThemeStore } from "@/stores/theme/useThemeStore";
 
 
 export const unstable_settings = {
-    anchor: "(tabs)",
+    anchor: "user/(tabs)",
 };
 
 SplashScreen.preventAutoHideAsync().then(() => {});
