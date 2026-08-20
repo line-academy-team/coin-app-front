@@ -1,11 +1,5 @@
 import React, { ReactNode, useState } from "react";
-import {
-    Modal,
-    Pressable,
-    Text,
-    TouchableOpacity,
-    View,
-} from "react-native";
+import { Modal, Pressable, Text, TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 
@@ -26,13 +20,13 @@ interface MainHeaderProps {
 }
 
 function MainHeader({
-                        variant = "sub",
-                        title,
-                        customTitle,
-                        isBackPress = false,
-                        onBackPress,
-                        showMenu = false,
-                    }: MainHeaderProps) {
+    variant = "sub",
+    title,
+    customTitle,
+    isBackPress = false,
+    onBackPress,
+    showMenu = false,
+}: MainHeaderProps) {
     const [isModalVisible, setModalVisible] = useState(false);
 
     const logout = useUserStore(state => state.logout);
@@ -59,23 +53,14 @@ function MainHeader({
                 visible={isModalVisible}
                 transparent
                 animationType="fade"
-                onRequestClose={() => setModalVisible(false)}
-            >
-                <Pressable
-                    className="flex-1 bg-black/40"
-                    onPress={() => setModalVisible(false)}
-                >
-                    <View className="absolute top-[80px] right-[24px] w-[200px] rounded-2xl bg-white overflow-hidden">
+                onRequestClose={() => setModalVisible(false)}>
+                <Pressable className="flex-1 bg-black/40" onPress={() => setModalVisible(false)}>
+                    <View className="absolute top-[80px] right-[24px] w-[200px] rounded-2xl bg-background-paper overflow-hidden">
                         {/* 마이페이지 */}
                         <TouchableOpacity
                             onPress={handleMyPage}
-                            className="flex-row items-center gap-3 px-5 py-4 border-b border-gray-100 active:bg-gray-50"
-                        >
-                            <Ionicons
-                                name="person-outline"
-                                size={20}
-                                color="#111827"
-                            />
+                            className="flex-row items-center gap-3 px-5 py-4 border-b border-divider active:bg-gray-50">
+                            <Ionicons name="person-outline" size={20} color="#111827" />
 
                             <Text className="font-pretendard-bold text-base text-text-default">
                                 마이페이지
@@ -85,15 +70,10 @@ function MainHeader({
                         {/* 로그아웃 */}
                         <TouchableOpacity
                             onPress={handleLogout}
-                            className="flex-row items-center gap-3 px-5 py-4 active:bg-gray-50"
-                        >
-                            <Ionicons
-                                name="log-out-outline"
-                                size={20}
-                                color="#EF4444"
-                            />
+                            className="flex-row items-center gap-3 px-5 py-4 active:bg-gray-50">
+                            <Ionicons name="log-out-outline" size={20} color="#EF4444" />
 
-                            <Text className="font-pretendard-bold text-base text-red-500">
+                            <Text className="font-pretendard-bold text-base text-error-main">
                                 로그아웃
                             </Text>
                         </TouchableOpacity>
@@ -125,13 +105,8 @@ function MainHeader({
                     {showMenu && (
                         <Pressable
                             onPress={() => setModalVisible(true)}
-                            className="w-10 h-10 items-center justify-center"
-                        >
-                            <Ionicons
-                                name="menu-outline"
-                                size={30}
-                                color="#111827"
-                            />
+                            className="w-10 h-10 items-center justify-center">
+                            <Ionicons name="menu-outline" size={30} color="#111827" />
                         </Pressable>
                     )}
                 </View>
@@ -149,18 +124,9 @@ function MainHeader({
             {/* 뒤로가기 */}
             {isBackPress && (
                 <Pressable
-                    onPress={
-                        onBackPress
-                            ? onBackPress
-                            : () => router.back()
-                    }
-                    className="z-10 w-9 h-9 items-center justify-center"
-                >
-                    <Ionicons
-                        name="chevron-back-outline"
-                        size={26}
-                        color="#111827"
-                    />
+                    onPress={onBackPress ? onBackPress : () => router.back()}
+                    className="z-10 w-9 h-9 items-center justify-center">
+                    <Ionicons name="chevron-back-outline" size={26} color="#111827" />
                 </Pressable>
             )}
 
@@ -169,9 +135,7 @@ function MainHeader({
                 {customTitle ? (
                     customTitle
                 ) : (
-                    <Text className="font-pretendard-bold text-xl text-text-default">
-                        {title}
-                    </Text>
+                    <Text className="font-pretendard-bold text-xl text-text-default">{title}</Text>
                 )}
             </View>
         </View>

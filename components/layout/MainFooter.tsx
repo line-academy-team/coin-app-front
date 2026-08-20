@@ -63,23 +63,13 @@ function MainFooter() {
                 const Icon = menu.icon;
                 const isActive = isActiveMenu(menu);
 
-                const menuColor = isActive ? "#2288ED" : "#6B7280";
+                const menuColor = isActive ? "#0F6BFF" : "#6B7280";
 
                 return (
                     <Pressable
                         key={menu.href}
                         onPress={() => router.push(menu.href as Href)}
-                        className="flex-1 items-center justify-center"
-                        style={{
-                            shadowColor: "#000000",
-                            shadowOffset: {
-                                width: 0,
-                                height: -4,
-                            },
-                            shadowOpacity: 0.03,
-                            shadowRadius: 10,
-                            elevation: 3,
-                        }}>
+                        className="flex-1 items-center justify-center">
                         <Icon size={24} color={menuColor} />
 
                         <Text
