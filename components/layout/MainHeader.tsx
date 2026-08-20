@@ -184,7 +184,9 @@ function MainHeader({
                     <Pressable
                         onPress={onBackPress ? onBackPress : () => router.back()}
                         className="w-9 h-9 items-center justify-center">
-                        <Ionicons name="chevron-back-outline" size={26} color="#111827" />
+                        <Text className="font-pretendard-regular text-[38px] leading-9 text-[#111827]">
+                            ‹
+                        </Text>
                     </Pressable>
                 )}
 
