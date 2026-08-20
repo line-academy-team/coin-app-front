@@ -4,35 +4,24 @@ import { router, useRootNavigationState } from "expo-router";
 
 import { useUserStore } from "@/stores/user/useUserStore";
 
-export default function IndexPage() {
+function IndexPage() {
     const navigationState = useRootNavigationState();
 
     const hasInitialized = useRef(false);
 
     useEffect(() => {
-        /*
-         * Expo Router가 준비되기 전에는 실행하지 않음
-         */
         if (!navigationState?.key) {
             return;
         }
-
-        /*
-         * 초기화 중복 실행 방지
-         */
         if (hasInitialized.current) {
             return;
         }
 
         hasInitialized.current = true;
-
         let isMounted = true;
 
         const initializeAuth = async () => {
             try {
-                /*
-                 * Zustand persist 복원 기다리기
-                 */
                 if (!useUserStore.persist.hasHydrated()) {
                     await new Promise<void>(resolve => {
                         const unsubscribe = useUserStore.persist.onFinishHydration(() => {
@@ -112,3 +101,5 @@ export default function IndexPage() {
         </View>
     );
 }
+
+export default IndexPage;
