@@ -46,14 +46,15 @@ function InfoCard({ title, value }: InfoCardProps) {
                 flex-1
                 rounded-xl
                 border
-                border-[#E5E7EB]
-                bg-white
+                border-divider
+                bg-background-paper
                 p-4
             ">
             <Text
                 className="
-                    text-xs
-                    text-gray-500
+                    text-sm
+                    text-text-secondary
+                    font-pretendard-semibold
                 ">
                 {title}
             </Text>
@@ -61,9 +62,9 @@ function InfoCard({ title, value }: InfoCardProps) {
             <Text
                 className="
                     mt-2
-                    text-sm
-                    font-bold
-                    text-[#111827]
+                    text-base
+                    font-pretendard-bold
+                    text-text-default
                 ">
                 {value}
             </Text>
@@ -134,9 +135,9 @@ export default function CoinInfo({ coin, realtimeData }: CoinInfoProps) {
                     ">
                     <Text
                         className="
-                            text-sm
-                            font-bold
-                            text-[#111827]
+                            text-base
+                            font-pretendard-bold
+                            text-text-default
                         ">
                         실시간 가격
                     </Text>
@@ -144,7 +145,7 @@ export default function CoinInfo({ coin, realtimeData }: CoinInfoProps) {
                     <Text
                         className="
                             text-xs
-                            text-[#2288ED]
+                            text-primary-main
                         ">
                         1초 갱신
                     </Text>

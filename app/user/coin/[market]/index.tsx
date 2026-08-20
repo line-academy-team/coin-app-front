@@ -13,6 +13,8 @@ import { CoinDetail, RealtimePricePoint } from "@/types/coin";
 import CoinInfo from "@/components/coin/CoinInfo";
 
 import CoinChart from "@/components/coin/CoinChart";
+import Button from "@/components/common/button/Button";
+import { twMerge } from "tailwind-merge";
 
 type TabType = "info" | "chart";
 
@@ -27,10 +29,6 @@ const formatKRW = (value: number) => {
 
 /**
  * timestamp
- *
- * ->
- *
- * 02:15:31
  */
 const formatTime = (timestamp: number) => {
     const date = new Date(timestamp);
@@ -51,11 +49,7 @@ export default function CoinDetailPage() {
 
     /**
      * URL
-     *
      * /user/coin/KRW-BTC
-     *
-     * ↓
-     *
      * market = KRW-BTC
      */
     const market = Array.isArray(params.market) ? params.market[0] : params.market;
@@ -82,7 +76,6 @@ export default function CoinDetailPage() {
 
     /**
      * 관심코인
-     *
      * 현재는 프론트 상태만 변경
      */
     const [isFavorite, setIsFavorite] = useState(false);
@@ -297,7 +290,7 @@ export default function CoinDetailPage() {
                     flex-1
                     items-center
                     justify-center
-                    bg-white
+                    bg-background-paper
                 ">
                 <ActivityIndicator size="large" color="#2288ED" />
 
@@ -305,7 +298,8 @@ export default function CoinDetailPage() {
                     className="
                         mt-3
                         text-sm
-                        text-gray-500
+                        text-text-secondary
+                        font-pretendard-medium
                     ">
                     코인 정보를 불러오는 중입니다.
                 </Text>
@@ -325,7 +319,7 @@ export default function CoinDetailPage() {
                     flex-1
                     items-center
                     justify-center
-                    bg-white
+                    bg-background-paper
                     px-5
                 ">
                 <Ionicons name="alert-circle-outline" size={40} color="#EF4444" />
@@ -334,7 +328,7 @@ export default function CoinDetailPage() {
                     className="
                         mt-3
                         text-sm
-                        text-red-500
+                        text-error-main
                     ">
                     {error ?? "코인 정보가 없습니다."}
                 </Text>
@@ -344,14 +338,14 @@ export default function CoinDetailPage() {
                     className="
                         mt-5
                         rounded-xl
-                        bg-[#2288ED]
+                        bg-primary-main
                         px-5
                         py-3
                     ">
                     <Text
                         className="
                             font-bold
-                            text-white
+                            text-text-light
                         ">
                         돌아가기
                     </Text>
@@ -398,7 +392,7 @@ export default function CoinDetailPage() {
         <View
             className="
                 flex-1
-                bg-white
+                bg-background-paper
             ">
             {/* ========================== */}
             {/* 헤더 */}
@@ -408,12 +402,11 @@ export default function CoinDetailPage() {
                 className="
                     flex-row
                     items-center
-                    px-5
-                    pb-2
-                    pt-5
+                    h-[80px]
+                    px-6
                 ">
                 <Pressable
-                    onPress={() => router.back()}
+                    onPress={() => router.push("/user/coin")}
                     className="
                         h-10
                         w-10
@@ -432,9 +425,9 @@ export default function CoinDetailPage() {
                     ">
                     <Text
                         className="
-                            text-lg
-                            font-bold
-                            text-[#111827]
+                            text-2xl
+                            text-text-default
+                            font-pretendard-bold
                         ">
                         {coin.koreanName}
                     </Text>
@@ -443,7 +436,8 @@ export default function CoinDetailPage() {
                         className="
                             ml-1
                             text-base
-                            text-gray-500
+                            text-text-secondary
+                            font-pretendard-medium
                         ">
                         ({coin.symbol})
                     </Text>
@@ -484,13 +478,13 @@ export default function CoinDetailPage() {
                         items-center
                         justify-center
                         rounded-full
-                        bg-[#FF9800]
+                        bg-warning-main
                     ">
                     <Text
                         className="
                             text-2xl
-                            font-bold
-                            text-white
+                            text-text-light
+                            font-pretendard-bold
                         ">
                         {coin.symbol === "BTC" ? "₿" : coin.symbol.charAt(0)}
                     </Text>
@@ -502,8 +496,8 @@ export default function CoinDetailPage() {
                     className="
                         mt-4
                         text-2xl
-                        font-bold
-                        text-[#111827]
+                        font-pretendard-bold
+                        text-text-default
                     ">
                     {formatKRW(coin.price)}
                 </Text>
@@ -514,7 +508,7 @@ export default function CoinDetailPage() {
                     className={`
                         mt-1
                         text-sm
-                        font-bold
+                        font-pretendard-bold
                         ${changeColor}
                     `}>
                     {isRise ? "▲ " : isFall ? "▼ " : ""}
@@ -534,15 +528,15 @@ export default function CoinDetailPage() {
                     className="
                         mt-2
                         rounded-full
-                        bg-[#EEF5FF]
+                        bg-background-deep
                         px-3
                         py-1
                     ">
                     <Text
                         className="
                             text-[10px]
-                            font-bold
-                            text-[#2288ED]
+                            font-pretendard-bold
+                            text-primary-main
                         ">
                         LIVE · 1초마다 갱신
                     </Text>
@@ -557,7 +551,7 @@ export default function CoinDetailPage() {
                 className="
                     flex-row
                     border-b
-                    border-[#E5E7EB]
+                    border-background-deep
                     px-5
                 ">
                 {/* 정보 */}
@@ -572,8 +566,8 @@ export default function CoinDetailPage() {
                     <Text
                         className={
                             selectedTab === "info"
-                                ? "font-bold text-[#2288ED]"
-                                : "font-medium text-gray-500"
+                                ? "font-pretendard-bold text-primary-main text-base"
+                                : "font-pretendard-medium text-text-secondary text-base"
                         }>
                         정보
                     </Text>
@@ -585,7 +579,7 @@ export default function CoinDetailPage() {
                                 bottom-0
                                 h-[2px]
                                 w-full
-                                bg-[#2288ED]
+                                bg-primary-main
                             "
                         />
                     )}
@@ -603,8 +597,8 @@ export default function CoinDetailPage() {
                     <Text
                         className={
                             selectedTab === "chart"
-                                ? "font-bold text-[#2288ED]"
-                                : "font-medium text-gray-500"
+                                ? "font-pretendard-bold text-primary-main text-base"
+                                : "font-pretendard-medium text-text-secondary text-base"
                         }>
                         차트
                     </Text>
@@ -616,7 +610,7 @@ export default function CoinDetailPage() {
                                 bottom-0
                                 h-[2px]
                                 w-full
-                                bg-[#2288ED]
+                                bg-primary-main
                             "
                         />
                     )}
@@ -655,56 +649,21 @@ export default function CoinDetailPage() {
             <View
                 className="
                     flex-row
-                    border-t
-                    border-[#E5E7EB]
-                    bg-white
+                    bg-background-paper
                     px-5
                     pb-5
                     pt-3
+                    gap-[10px]
                 ">
-                {/* 관심코인 */}
 
-                <Pressable
-                    onPress={() => setIsFavorite(previous => !previous)}
-                    className="
-                        mr-2
-                        flex-1
-                        items-center
-                        justify-center
-                        rounded-xl
-                        border
-                        border-[#2288ED]
-                        py-3
-                    ">
-                    <Text
-                        className="
-                            font-bold
-                            text-[#2288ED]
-                        ">
-                        {isFavorite ? "관심코인 해제" : "관심코인"}
-                    </Text>
-                </Pressable>
+                <Button variant={"outline"} onPress={() => setIsFavorite(previous => !previous)}>
+                    {isFavorite ? "관심코인 해제" : "관심코인"}
+                </Button>
 
-                {/* 포트폴리오 */}
+                <Button variant={"solid"} color={"primary"} onPress={handlePortfolioPress} >
+                    포트폴리오에 추가
+                </Button>
 
-                <Pressable
-                    onPress={handlePortfolioPress}
-                    className="
-                        flex-1
-                        items-center
-                        justify-center
-                        rounded-xl
-                        bg-[#2288ED]
-                        py-3
-                    ">
-                    <Text
-                        className="
-                            font-bold
-                            text-white
-                        ">
-                        포트폴리오에 추가
-                    </Text>
-                </Pressable>
             </View>
         </View>
     );

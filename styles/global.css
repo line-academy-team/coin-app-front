@@ -36,26 +36,26 @@
         --secondary-chart: #4F7CFF;
     }
 
-    /*.dark {*/
-    /*    --primary: #8B5CF6;*/
-    /*    --hover: #7C3AED;*/
-    /*    --active: #6D28D9;*/
-    /*    --light: #2E1065;*/
+    .dark {
+        --primary: #8B5CF6;
+        --hover: #7C3AED;
+        --active: #6D28D9;
+        --light: #2E1065;
 
-    /*    --background: #111827;*/
-    /*    --surface: #1F2937;*/
-    /*    --border: #374151;*/
+        --background: #111827;
+        --surface: #1F2937;
+        --border: #374151;
 
-    /*    --text: #F9FAFB;*/
-    /*    --text-secondary: #9CA3AF;*/
-    /*    --text-light: #FFFFFF;*/
+        --text: #F9FAFB;
+        --text-secondary: #9CA3AF;
+        --text-light: #FFFFFF;
 
-    /*    --success: #34D399;*/
-    /*    --warning: #FBBF24;*/
-    /*    --error: #F87171;*/
+        --success: #34D399;
+        --warning: #FBBF24;
+        --error: #F87171;
 
-    /*    --secondary: #06B6D4;*/
-    /*    --secondary-chart: #4F7CFF;*/
+        --secondary: #06B6D4;
+        --secondary-chart: #4F7CFF;
 
-    /*}*/
+    }
 }

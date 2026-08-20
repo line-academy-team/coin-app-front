@@ -135,7 +135,7 @@ function MainHeader({
                 {customTitle ? (
                     customTitle
                 ) : (
-                    <Text className="font-pretendard-bold text-xl text-text-default">{title}</Text>
+                    <Text className="font-pretendard-bold text-2xl text-text-default">{title}</Text>
                 )}
             </View>
         </View>

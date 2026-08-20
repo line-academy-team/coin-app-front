@@ -7,23 +7,10 @@ import { getCoins } from "@/api/coin";
 import { Coin } from "@/types/coin";
 import MainHeader from "@/components/layout/MainHeader";
 
-type Category = "전체" | "비트코인" | "이더리움" | "스테이블" | "디파이";
-
-const categories: Category[] = ["전체", "비트코인", "이더리움", "스테이블", "디파이"];
-
-const stableCoins = ["USDT", "USDC"];
-
-const defiCoins = ["AAVE", "UNI", "LINK", "MKR", "COMP", "SNX", "CRV", "1INCH"];
-
 export default function CoinPage() {
     const [coinList, setCoinList] = useState<Coin[]>([]);
-
     const [keyword, setKeyword] = useState("");
-
-    const [selectedCategory, setSelectedCategory] = useState<Category>("전체");
-
     const [isLoading, setIsLoading] = useState(true);
-
     const [error, setError] = useState<string | null>(null);
 
     useEffect(() => {
@@ -47,49 +34,25 @@ export default function CoinPage() {
         fetchCoins();
     }, []);
 
-
     const filteredCoins = useMemo(() => {
         const searchKeyword = keyword.trim().toLowerCase();
 
+        if (!searchKeyword) {
+            return coinList;
+        }
+
         return coinList.filter(coin => {
-            let categoryMatched = true;
-
-
-            if (selectedCategory === "비트코인") {
-                categoryMatched = coin.symbol === "BTC";
-            }
-
-
-            if (selectedCategory === "이더리움") {
-                categoryMatched = coin.symbol === "ETH";
-            }
-
-
-            if (selectedCategory === "스테이블") {
-                categoryMatched = stableCoins.includes(coin.symbol);
-            }
-
-
-            if (selectedCategory === "디파이") {
-                categoryMatched = defiCoins.includes(coin.symbol);
-            }
-
-
-            const keywordMatched =
-                searchKeyword.length === 0 ||
+            return (
                 coin.koreanName.toLowerCase().includes(searchKeyword) ||
                 coin.englishName.toLowerCase().includes(searchKeyword) ||
-                coin.symbol.toLowerCase().includes(searchKeyword);
-
-            return categoryMatched && keywordMatched;
+                coin.symbol.toLowerCase().includes(searchKeyword)
+            );
         });
-    }, [coinList, keyword, selectedCategory]);
-
+    }, [coinList, keyword]);
 
     const handleCoinPress = (coin: Coin) => {
         router.push(`/user/coin/${coin.market}` as Href);
     };
-
 
     const getChangeRateText = (changeRate: number) => {
         if (changeRate > 0) {
@@ -101,8 +64,9 @@ export default function CoinPage() {
 
     return (
         <View className="flex-1 bg-background-default">
-            <MainHeader title={"코인탐색"} />
+            <MainHeader title="코인탐색" />
 
+            {/* 검색창 */}
             <View className="px-5">
                 <View
                     className="
@@ -125,7 +89,7 @@ export default function CoinPage() {
                         className="
                             ml-2
                             flex-1
-                            text-sm
+                            text-base
                             text-text-default
                             font-pretendard-bold
                         "
@@ -139,64 +103,18 @@ export default function CoinPage() {
                 </View>
             </View>
 
-            <View className="mt-4">
-                <FlatList
-                    horizontal
-                    data={categories}
-                    keyExtractor={item => item}
-                    showsHorizontalScrollIndicator={false}
-                    contentContainerStyle={{
-                        paddingHorizontal: 20,
-                    }}
-                    renderItem={({ item }) => {
-                        const isSelected = selectedCategory === item;
+            {/* 구분선 */}
+            <View className="mx-5 mt-4 h-[1px] bg-divider" />
 
-                        return (
-                            <Pressable onPress={() => setSelectedCategory(item)} className="mr-6">
-                                <Text
-                                    className={
-                                        isSelected
-                                            ? "pb-2 text-sm font-bold text-primary-main font-pretendard-bold"
-                                            : "pb-2 text-sm font-medium text-text-secondary font-pretendard-bold"
-                                    }>
-                                    {item}
-                                </Text>
-
-                                {isSelected && (
-                                    <View
-                                        className="
-                                            h-[2px]
-                                            w-full
-                                            bg-primary-main
-                                        "
-                                    />
-                                )}
-                            </Pressable>
-                        );
-                    }}
-                />
-            </View>
-
-            <View
-                className="
-                    h-[1px]
-                    bg-divider
-                "
-            />
-
+            {/* 로딩 */}
             {isLoading && (
-                <View
-                    className="
-                        flex-1
-                        items-center
-                        justify-center
-                    ">
+                <View className="flex-1 items-center justify-center">
                     <ActivityIndicator size="large" color="#2288ED" />
 
                     <Text
                         className="
                             mt-3
-                            text-sm
+                            text-base
                             text-text-disabled
                             font-pretendard-medium
                         ">
@@ -205,14 +123,9 @@ export default function CoinPage() {
                 </View>
             )}
 
+            {/* 에러 */}
             {!isLoading && error && (
-                <View
-                    className="
-                        flex-1
-                        items-center
-                        justify-center
-                        px-5
-                    ">
+                <View className="flex-1 items-center justify-center px-5">
                     <Ionicons name="alert-circle-outline" size={36} color="#EF4444" />
 
                     <Text
@@ -227,6 +140,7 @@ export default function CoinPage() {
                 </View>
             )}
 
+            {/* 코인 목록 */}
             {!isLoading && !error && (
                 <FlatList
                     data={filteredCoins}
@@ -238,11 +152,7 @@ export default function CoinPage() {
                         paddingBottom: 30,
                     }}
                     ListEmptyComponent={
-                        <View
-                            className="
-                                items-center
-                                py-20
-                            ">
+                        <View className="items-center py-20">
                             <Ionicons name="search-outline" size={34} color="#9CA3AF" />
 
                             <Text
@@ -269,7 +179,6 @@ export default function CoinPage() {
                                 py-3
                             ">
                             {/* 코인 아이콘 */}
-
                             <View
                                 className="
                                     mr-3
@@ -283,7 +192,6 @@ export default function CoinPage() {
                                 <Text
                                     className="
                                         text-xs
-                                        font-bold
                                         text-text-light
                                         font-pretendard-bold
                                     ">
@@ -292,13 +200,11 @@ export default function CoinPage() {
                             </View>
 
                             {/* 코인명 */}
-
                             <View className="flex-1">
                                 <Text
                                     numberOfLines={1}
                                     className="
-                                        text-sm
-                                        font-bold
+                                        text-base
                                         text-text-default
                                         font-pretendard-bold
                                     ">
@@ -317,16 +223,10 @@ export default function CoinPage() {
                             </View>
 
                             {/* 현재가 */}
-
-                            <View
-                                className="
-                                    min-w-[100px]
-                                    items-end
-                                ">
+                            <View className="min-w-[100px] items-end">
                                 <Text
                                     className="
                                         text-sm
-                                        font-medium
                                         text-text-default
                                         font-pretendard-medium
                                     ">
@@ -335,20 +235,14 @@ export default function CoinPage() {
                             </View>
 
                             {/* 등락률 */}
-
-                            <View
-                                className="
-                                    ml-3
-                                    min-w-[55px]
-                                    items-end
-                                ">
+                            <View className="ml-3 min-w-[55px] items-end">
                                 <Text
                                     className={
                                         item.changeRate > 0
-                                            ? "text-xs font-medium text-success-main"
+                                            ? "text-xs text-success-main font-pretendard-medium"
                                             : item.changeRate < 0
-                                              ? "text-xs font-medium text-error-main"
-                                              : "text-xs font-medium text-text-secondary"
+                                              ? "text-xs text-error-main font-pretendard-medium"
+                                              : "text-xs text-text-secondary font-pretendard-medium"
                                     }>
                                     {getChangeRateText(item.changeRate)}
                                 </Text>
