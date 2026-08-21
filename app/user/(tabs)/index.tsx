@@ -1,11 +1,12 @@
-import { Text, View } from "react-native";
+import { ScrollView, Text, View } from "react-native";
+import { twMerge } from "tailwind-merge";
 
  function Dashboard() {
     return (
-        <View>
-            <Text>
-                4.메인페이지!
-            </Text>
+        <View className={twMerge(["flex-1", "bg-background-default", "p-[30px]"])}>
+            <ScrollView>
+                <Text className={twMerge([""])}>안녕하세요</Text>
+            </ScrollView>
         </View>
     );
 }
