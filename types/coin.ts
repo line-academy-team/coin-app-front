@@ -33,9 +33,7 @@ export interface UpbitTicker {
     timestamp: number;
 }
 
-/**
- * 코인 목록 페이지에서 사용하는 데이터
- */
+
 export interface Coin {
     market: string;
 
@@ -48,9 +46,7 @@ export interface Coin {
     changeRate: number;
 }
 
-/**
- * 코인 상세 페이지
- */
+
 export interface CoinDetail extends Coin {
     changePrice: number;
 
@@ -65,9 +61,7 @@ export interface CoinDetail extends Coin {
     timestamp: number;
 }
 
-/**
- * 1초마다 수집하는 실시간 가격
- */
+
 export interface RealtimePricePoint {
     timestamp: number;
 

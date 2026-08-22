@@ -24,12 +24,12 @@ function InputGroup({
 
     return (
         <View className="mt-[18px]">
-            <Text className={"text-secondary-main font-pretendard-semibold text-sm"}>{label}</Text>
+            <Text className={"text-text-default font-pretendard-semibold text-lg py-2"}>{label}</Text>
             <TextInput
                 className={twMerge(
-                    "mt-3 p-4 relative font-pretendard",
-                    "bg-brand-surface rounded-xl border border-secondary-main",
-                    "focus:outline-secondary-hover",
+                    "h-12 px-3 relative font-pretendard-normal",
+                    "bg-background-paper rounded-xl border border-text-disabled",
+                    "focus:outline-secondary-main",
                     errorMessage && "border-error-main",
                 )}
                 placeholder={placeholder}
@@ -38,7 +38,7 @@ function InputGroup({
             />
             {isPassword && (
                 <Pressable
-                    className={twMerge("h-5 w-5 absolute", "right-7 top-11")}
+                    className={twMerge("h-5 w-5 absolute", "right-7 top-[53px]")}
                     onPress={() => {
                         setVisibility(!visibility);
                     }}>

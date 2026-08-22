@@ -3,6 +3,8 @@ import { LoginResponse, User } from "@/types/user";
 import { RegisterUserInputType } from "@/schemas/user/registerUserSchema";
 import { LoginRequestType } from "@/schemas/user/loginUserSchema";
 
+
+
 const registerUser = async (data: RegisterUserInputType): Promise<User> => {
     const { confirmPassword, ...submitData } = data;
     const response = await axiosInstance.post("/users/create", submitData);
