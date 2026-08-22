@@ -2,7 +2,7 @@ import { Href, router } from "expo-router";
 import { useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 
-import { createPortfolioMock } from "@/api/portfolioApi";
+import { createPortfolioMock } from "@/api/user/portfolioApi";
 import MainHeader from "@/components/layout/MainHeader";
 import PortfolioBottomActions from "@/components/portfolio/PortfolioBottomActions";
 import {
