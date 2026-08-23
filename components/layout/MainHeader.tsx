@@ -86,7 +86,6 @@ function MainHeader({
                 onRequestClose={() => setModalVisible(false)}>
                 <Pressable className="flex-1 bg-black/40" onPress={() => setModalVisible(false)}>
                     <View className="absolute top-[80px] right-[24px] w-[200px] bg-background-paper rounded-2xl overflow-hidden">
-                        {/* 마이페이지 */}
                         <TouchableOpacity
                             onPress={handleMyPage}
                             className="flex-row items-center gap-3 px-5 py-4 border-b border-divider active:bg-gray-50">
@@ -102,7 +101,7 @@ function MainHeader({
                             className="flex-row items-center gap-3 px-5 py-4 active:bg-gray-50">
                             <Ionicons name="log-out-outline" size={20} color="#EF4444" />
 
-                            <Text className="font-pretendard-bold text-base text-error">
+                            <Text className="font-pretendard-bold text-base text-error-main">
                                 로그아웃
                             </Text>
                         </TouchableOpacity>

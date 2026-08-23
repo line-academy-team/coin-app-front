@@ -1,7 +1,10 @@
 import { Config } from "tailwindcss";
+import { createRequire } from "node:module";
+
+const nativewindPreset = createRequire(import.meta.url)("nativewind/preset");
 
 type CustomConfig = Config & {
-    safelist?: Array<string | { pattern: RegExp; variants?: string[] }>;
+    safelist?: (string | { pattern: RegExp; variants?: string[] })[];
 };
 
 export default {
@@ -11,7 +14,7 @@ export default {
         "./components/**/*.{js,jsx,ts,tsx}",
         "./types/**/*.{js,jsx,ts,tsx}",
     ],
-    presets: [require("nativewind/preset")],
+    presets: [nativewindPreset],
     plugins: [],
     theme: {
         extend: {

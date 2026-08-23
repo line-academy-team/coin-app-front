@@ -1,12 +1,13 @@
-import axios from "axios";
+import { create } from "axios";
+import { Platform } from "react-native";
 import { useUserStore } from "@/stores/user/useUserStore";
 
-const BASE_URL = process.env.EXPO_PUBLIC_API_BASE_URL || "";
+const defaultBaseUrl = Platform.OS === "android" ? "http://10.0.2.2:8080" : "http://localhost:8080";
+const BASE_URL = (process.env.EXPO_PUBLIC_API_BASE_URL || defaultBaseUrl).replace(/\/$/, "");
 
-const api = axios.create({
+const api = create({
     baseURL: BASE_URL,
-    timeout: 10000,
-    withCredentials: true,
+    timeout: 15000,
 });
 
 api.interceptors.request.use(config => {

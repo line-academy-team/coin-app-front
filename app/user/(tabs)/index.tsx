@@ -1,295 +1,272 @@
-import { Text, View, Image, Pressable, ScrollView } from "react-native";
-import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
+import { ActivityIndicator, Image, Pressable, ScrollView, Text, View } from "react-native";
 import { AntDesign, Ionicons } from "@expo/vector-icons";
-import { SafeAreaView } from "react-native-safe-area-context";
-import Button from "@/components/common/button/Button";
-import { CalculatedPortfolio, Portfolio } from "@/types/portfolio";
-import portfolioApi from "@/api/user/portfolioApi";
-import { getCoins } from "@/api/coinApi";
-import CalcUtils from "@/utils/CalcUtils";
-import { twMerge } from "tailwind-merge";
+import { Href, router, useFocusEffect } from "expo-router";
 
-function Dashboard() {
-    const router = useRouter();
-    const [isLoading, setIsLoading] = useState(false);
+import { getCoins } from "@/api/coinApi";
+import portfolioApi from "@/api/user/portfolioApi";
+import Button from "@/components/common/button/Button";
+import { useFavoriteCoinStore } from "@/stores/coin/useFavoriteCoinStore";
+import { useUserStore } from "@/stores/user/useUserStore";
+import { CalculatedPortfolio } from "@/types/portfolio";
+import CalcUtils from "@/utils/CalcUtils";
+
+function FeatureCard({
+    color,
+    icon,
+    children,
+}: {
+    color: string;
+    icon: keyof typeof Ionicons.glyphMap;
+    children: string;
+}) {
+    return (
+        <View
+            className="flex-row items-center rounded-xl border bg-white p-2"
+            style={{ borderColor: color }}>
+            <View
+                className="h-12 w-12 items-center justify-center rounded-xl"
+                style={{ backgroundColor: color }}>
+                <Ionicons name={icon} size={25} color="#FFFFFF" />
+            </View>
+            <Text className="ml-3 flex-1 font-pretendard-semibold text-lg text-text-default">
+                {children}
+            </Text>
+        </View>
+    );
+}
+
+function DashboardPage() {
     const [portfolios, setPortfolios] = useState<CalculatedPortfolio[]>([]);
+    const [dailyChange, setDailyChange] = useState(0);
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const favoriteCount = useFavoriteCoinStore(state => state.markets.length);
+    const token = useUserStore(state => state.token);
 
     useFocusEffect(
         useCallback(() => {
-            let isMounted = true;
+            if (!token) {
+                return;
+            }
 
-            const fetchPortfolios = async () => {
+            let active = true;
+            const load = async () => {
                 try {
-                    const [portfolioData, upbitData] = await Promise.all([
+                    setIsLoading(true);
+                    setError(null);
+                    const [portfolioData, coinData] = await Promise.all([
                         portfolioApi.getMyPortfolios(),
-                        getCoins(),
+                        getCoins().catch(() => []),
                     ]);
-
-                    if (isMounted) {
-                        const calculatedPortfolios = CalcUtils.calculatePortfolioReturns(
-                            portfolioData,
-                            upbitData,
-                        );
-                        setPortfolios(calculatedPortfolios);
+                    if (!active) {
+                        return;
                     }
-                } catch (error) {
-                    console.error("포트폴리오 목록 조회 실패:", error);
+                    setPortfolios(CalcUtils.calculatePortfolioReturns(portfolioData, coinData));
+                    const heldMarkets = new Set(
+                        portfolioData.flatMap(portfolio =>
+                            portfolio.coins.map(coin => coin.market),
+                        ),
+                    );
+                    const heldCoins = coinData.filter(coin => heldMarkets.has(coin.market));
+                    setDailyChange(
+                        heldCoins.length
+                            ? heldCoins.reduce((total, coin) => total + coin.changeRate, 0) /
+                                  heldCoins.length
+                            : 0,
+                    );
+                } catch {
+                    if (active) {
+                        setError("포트폴리오 현황을 불러오지 못했습니다.");
+                    }
                 } finally {
-                    if (isMounted) {
+                    if (active) {
                         setIsLoading(false);
                     }
                 }
             };
-
-            fetchPortfolios().then(() => {});
-
+            void load();
             return () => {
-                isMounted = false;
+                active = false;
             };
-        }, []),
+        }, [token]),
     );
 
-    // --- 1. 포트폴리오가 없을 때의 화면 ---
-    const renderEmptyState = () => (
-        <View className="mt-6 flex-1">
-            <Image
-                source={require("@/assets/images/dashboard/b00f218fd7b59d7b842ad39f6354dde5b704a606.png")}
-                style={{ width: "100%", height: 180, marginBottom: 32 }}
-                resizeMode="contain"
-            />
-
-            <View className="gap-4">
-                <View
-                    className={twMerge(
-                        ["flex-row", "gap-3", "items-center"],
-                        ["p-2", "rounded-xl"],
-                        ["border", "border-secondary-main", "bg-background-paper"],
-                    )}>
-                    <View
-                        className={twMerge(
-                            ["justify-center", "items-center"],
-                            ["w-11", "h-11", "rounded-xl", "bg-secondary-main"],
-                        )}>
-                        <Ionicons name="trending-up" size={24} color="#FFFFFF" />
-                    </View>
-
-                    <Text
-                        className={twMerge([
-                            "font-pretendard-semibold",
-                            "text-xl",
-                            "text-text-default",
-                        ])}>
-                        실제 투자 없이 시뮬레이션
-                    </Text>
-                </View>
-
-                <View
-                    className={twMerge(
-                        ["flex-row", "gap-3", "items-center"],
-                        ["p-2", "rounded-xl"],
-                        ["border", "border-secondary-chart", "bg-background-paper"],
-                    )}>
-                    <View
-                        className={twMerge(
-                            ["justify-center", "items-center"],
-                            ["w-11", "h-11", "rounded-xl", "bg-secondary-chart"],
-                        )}>
-                        <AntDesign name="dollar" size={24} color="#FFFFFF" />
-                    </View>
-
-                    <Text
-                        className={twMerge([
-                            "font-pretendard-semibold",
-                            "text-xl",
-                            "text-text-default",
-                        ])}>
-                        다양한 코인으로 포트폴리오 구성
-                    </Text>
-                </View>
-
-                <View
-                    className={twMerge(
-                        ["flex-row", "gap-3", "items-center"],
-                        ["p-2", "rounded-xl"],
-                        ["border", "border-warning-main", "bg-background-paper"],
-                    )}>
-                    <View
-                        className={twMerge(
-                            ["justify-center", "items-center"],
-                            ["w-11", "h-11", "rounded-xl", "bg-warning-main"],
-                        )}>
-                        <Ionicons name="bar-chart" size={24} color="#FFFFFF" />
-                    </View>
-
-                    <Text
-                        className={twMerge([
-                            "font-pretendard-semibold",
-                            "text-xl",
-                            "text-text-default",
-                        ])}>
-                        과거 데이터를 통한 수익률 확인
-                    </Text>
-                </View>
-            </View>
-        </View>
-    );
-
-    // --- 2. 포트폴리오가 있을 때의 화면 ---
-    const renderPopulatedState = () => {
-        const totalInvestment = portfolios.reduce((sum, p) => sum + p.totalSeedMoney, 0);
-        const currentTotalAssets = portfolios.reduce((sum, p) => sum + p.currentTotalValue, 0);
-        const totalProfitLoss = currentTotalAssets - totalInvestment;
-        const overallReturnRate =
-            totalInvestment > 0 ? (totalProfitLoss / totalInvestment) * 100 : 0;
-
-        return (
-            <View className="mt-4 flex-1">
-                <View className="bg-[#1A73E8] rounded-2xl p-5 relative overflow-hidden">
-                    <Text className="text-blue-100 font-pretendard text-sm mb-1">총 자산</Text>
-                    <Text className="text-white font-pretendard-bold text-3xl mb-4">
-                        ₩{currentTotalAssets.toLocaleString()}
-                    </Text>
-
-                    <View className="flex-row items-center mb-1">
-                        <Text className="text-blue-100 font-pretendard text-xs w-[60px]">
-                            평가손익
-                        </Text>
-                        <Text className="text-white font-pretendard-bold text-sm">
-                            {totalProfitLoss > 0 ? "+" : ""}₩{totalProfitLoss.toLocaleString()}
-                        </Text>
-                    </View>
-                    <View className="flex-row items-center">
-                        <Text className="text-blue-100 font-pretendard text-xs w-[60px]">
-                            수익률
-                        </Text>
-                        <View className="bg-blue-400/50 rounded-full px-2 py-0.5">
-                            <Text className="text-white font-pretendard-bold text-xs">
-                                {overallReturnRate > 0 ? "+" : ""}
-                                {overallReturnRate.toFixed(2)}%
-                            </Text>
-                        </View>
-                    </View>
-
-                    <Image
-                        source={require("@/assets/images/welcome/a7b6abd48871456077a8818d2955ed94772f99ec.png")}
-                        className="absolute -right-4 -bottom-4 w-[120px] h-[120px]"
-                        resizeMode="contain"
-                    />
-                </View>
-
-                <View className="flex-row justify-between mt-4">
-                    <View className="flex-1 bg-white border border-[#06B6D4] rounded-xl p-3 flex-row items-center justify-center mr-2">
-                        <Ionicons name="briefcase" size={20} color="#06B6D4" className="mr-2" />
-                        <View>
-                            <Text className="text-gray-500 text-[10px] font-pretendard">
-                                포트폴리오
-                            </Text>
-                            <Text className="text-gray-800 text-xs font-pretendard-bold">
-                                {portfolios.length}개
-                            </Text>
-                        </View>
-                    </View>
-                    {/* TODO : 관심코인 갯수, 오늘 변동 수정해야 함 */}
-                    <View className="flex-1 bg-white border border-[#F59E0B] rounded-xl p-3 flex-row items-center justify-center mr-2">
-                        <Ionicons name="star" size={20} color="#F59E0B" className="mr-2" />
-                        <View>
-                            <Text className="text-gray-500 text-[10px] font-pretendard">
-                                관심코인
-                            </Text>
-                            <Text className="text-gray-800 text-xs font-pretendard-bold">5개</Text>
-                        </View>
-                    </View>
-                    <View className="flex-1 bg-white border border-[#8B5CF6] rounded-xl p-3 flex-row items-center justify-center">
-                        <Ionicons name="trending-up" size={20} color="#3B82F6" className="mr-2" />
-                        <View>
-                            <Text className="text-gray-500 text-[10px] font-pretendard">
-                                오늘 변동
-                            </Text>
-                            <Text className="text-gray-800 text-xs font-pretendard-bold">
-                                +1.2%
-                            </Text>
-                        </View>
-                    </View>
-                </View>
-
-                <View className="mt-8">
-                    <View className="flex-row justify-between items-center mb-4">
-                        <Text className="text-gray-800 font-pretendard-bold text-lg">
-                            내 포트폴리오
-                        </Text>
-                        <Pressable>
-                            <Text className="text-[#1A73E8] font-pretendard text-sm">
-                                전체보기 {">"}
-                            </Text>
-                        </Pressable>
-                    </View>
-
-                    {portfolios.map(portfolio => (
-                        <View
-                            key={portfolio.id}
-                            className="bg-white rounded-2xl p-4 mb-3 flex-row items-center shadow-sm">
-                            <View className="w-12 h-12 bg-blue-50 rounded-full items-center justify-center mr-4">
-                                <Ionicons name={portfolio.icon} size={24} color="#1A73E8" />
-                            </View>
-                            <View className="flex-1">
-                                <Text className="text-gray-500 font-pretendard text-xs mb-1">
-                                    {portfolio.title}
-                                </Text>
-                                <Text className="text-gray-800 font-pretendard-bold text-[16px]">
-                                    {portfolio.totalSeedMoney.toLocaleString()}원
-                                </Text>
-                                <Text className="text-gray-400 font-pretendard text-[10px] mt-1">
-                                    {portfolio.tags}
-                                </Text>
-                            </View>
-                            <View className="items-end">
-                                <Text className="text-[#10B981] font-pretendard-bold text-sm mb-1">
-                                    +{portfolio.returnRate}% {">"}
-                                </Text>
-                            </View>
-                        </View>
-                    ))}
-                </View>
-            </View>
-        );
-    };
+    const totalInvestment = portfolios.reduce((sum, item) => sum + item.totalSeedMoney, 0);
+    const currentAssets = portfolios.reduce((sum, item) => sum + item.currentTotalValue, 0);
+    const profit = currentAssets - totalInvestment;
+    const returnRate = totalInvestment > 0 ? (profit / totalInvestment) * 100 : 0;
 
     return (
-        <SafeAreaView className="flex-1 bg-background-default p-[30px]">
+        <View className="flex-1 bg-background-default">
             <ScrollView
-                className="flex-1 px-5"
-                contentContainerStyle={{ paddingBottom: 100 }}
-                showsVerticalScrollIndicator={false}>
-                <View className="pt-8 pb-2">
-                    <Text className="text-3xl font-pretendard-bold text-text-default py-5">
+                className="flex-1"
+                showsVerticalScrollIndicator={false}
+                contentContainerStyle={{
+                    paddingHorizontal: 20,
+                    paddingTop: 28,
+                    paddingBottom: 94,
+                }}>
+                <View className="w-full max-w-[560px] self-center">
+                    <Text className="font-pretendard-bold text-4xl text-text-default">
                         안녕하세요
                     </Text>
-                    <Text
-                        className={twMerge([
-                            "text-text-secondary",
-                            "font-pretendard-semibold",
-                            "text-base",
-                        ])}>
+                    <Text className="mt-5 font-pretendard-semibold text-lg leading-7 text-text-secondary">
                         {portfolios.length === 0
                             ? "지금이 바로 시작할 시간이에요.\n나만의 가상 포트폴리오를 만들어보세요."
                             : "오늘의 포트폴리오 현황을 확인해보세요"}
                     </Text>
-                </View>
 
-                {portfolios.length === 0 ? renderEmptyState() : renderPopulatedState()}
+                    {isLoading ? (
+                        <View className="h-80 items-center justify-center">
+                            <ActivityIndicator size="large" color="#0F6BFF" />
+                        </View>
+                    ) : error ? (
+                        <View className="mt-8 rounded-2xl bg-error-light px-5 py-5">
+                            <Text className="text-center font-pretendard-medium text-error-main">
+                                {error}
+                            </Text>
+                        </View>
+                    ) : portfolios.length === 0 ? (
+                        <View className="mt-3">
+                            <Image
+                                source={require("@/assets/images/main/main_page_img.png")}
+                                style={{ width: "100%", height: 260 }}
+                                resizeMode="contain"
+                            />
+                            <View className="gap-4">
+                                <FeatureCard color="#11B5D0" icon="swap-horizontal">
+                                    실제 투자 없이 시뮬레이션
+                                </FeatureCard>
+                                <FeatureCard color="#4F7CFF" icon="logo-bitcoin">
+                                    다양한 코인으로 포트폴리오 구성
+                                </FeatureCard>
+                                <FeatureCard color="#F59E0B" icon="bar-chart">
+                                    과거 데이터를 통한 수익률 확인
+                                </FeatureCard>
+                            </View>
+                        </View>
+                    ) : (
+                        <View className="mt-7">
+                            <View className="overflow-hidden rounded-2xl bg-[#1368E8] px-5 py-5">
+                                <Text className="font-pretendard-medium text-blue-100">
+                                    총 자산
+                                </Text>
+                                <Text className="mt-1 font-pretendard-bold text-3xl text-white">
+                                    ₩{Math.round(currentAssets).toLocaleString("ko-KR")}
+                                </Text>
+                                <Text className="mt-4 font-pretendard-medium text-sm text-blue-100">
+                                    평가손익　
+                                    <Text className="font-pretendard-bold text-white">
+                                        {profit >= 0 ? "+" : ""}₩
+                                        {Math.round(profit).toLocaleString("ko-KR")}
+                                    </Text>
+                                </Text>
+                                <Text className="mt-2 font-pretendard-medium text-sm text-blue-100">
+                                    수익률　
+                                    <Text className="font-pretendard-bold text-white">
+                                        {returnRate >= 0 ? "+" : ""}
+                                        {returnRate.toFixed(2)}%
+                                    </Text>
+                                </Text>
+                                <Image
+                                    source={require("@/assets/images/welcome/a7b6abd48871456077a8818d2955ed94772f99ec.png")}
+                                    className="absolute -bottom-4 -right-4 h-36 w-36"
+                                    resizeMode="contain"
+                                />
+                            </View>
 
-                <View className="absolute bottom-0 left-0 right-0 bg-[#F8FAFC]">
-                    <Button
-                        variant={"solid"}
-                        color={"primary"}
-                        onPress={() => router.push("/user/portfolio/create")}>
-                        + 포트폴리오 만들기
-                    </Button>
+                            <View className="mt-4 flex-row gap-2">
+                                <View className="flex-1 flex-row items-center justify-center rounded-xl border border-secondary-main bg-white py-4">
+                                    <Ionicons name="briefcase" size={22} color="#11B5D0" />
+                                    <View className="ml-2">
+                                        <Text className="font-pretendard-medium text-xs text-text-secondary">
+                                            포트폴리오
+                                        </Text>
+                                        <Text className="font-pretendard-bold text-text-default">
+                                            {portfolios.length}개
+                                        </Text>
+                                    </View>
+                                </View>
+                                <View className="flex-1 flex-row items-center justify-center rounded-xl border border-warning-main bg-white py-4">
+                                    <Ionicons name="star" size={22} color="#F59E0B" />
+                                    <View className="ml-2">
+                                        <Text className="font-pretendard-medium text-xs text-text-secondary">
+                                            관심코인
+                                        </Text>
+                                        <Text className="font-pretendard-bold text-text-default">
+                                            {favoriteCount}개
+                                        </Text>
+                                    </View>
+                                </View>
+                                <View className="flex-1 flex-row items-center justify-center rounded-xl border border-[#8B5CF6] bg-white py-4">
+                                    <AntDesign name="line-chart" size={22} color="#4F7CFF" />
+                                    <View className="ml-2">
+                                        <Text className="font-pretendard-medium text-xs text-text-secondary">
+                                            오늘 변동
+                                        </Text>
+                                        <Text className="font-pretendard-bold text-text-default">
+                                            {dailyChange >= 0 ? "+" : ""}
+                                            {dailyChange.toFixed(1)}%
+                                        </Text>
+                                    </View>
+                                </View>
+                            </View>
+
+                            <View className="mb-4 mt-8 flex-row items-center justify-between">
+                                <Text className="font-pretendard-bold text-2xl text-text-default">
+                                    내 포트폴리오
+                                </Text>
+                                <Pressable onPress={() => router.push("/user/portfolio" as Href)}>
+                                    <Text className="font-pretendard-bold text-primary-main">
+                                        전체보기 〉
+                                    </Text>
+                                </Pressable>
+                            </View>
+                            {portfolios.slice(0, 2).map(portfolio => (
+                                <Pressable
+                                    key={portfolio.id}
+                                    onPress={() =>
+                                        router.push(`/user/portfolio/${portfolio.id}` as Href)
+                                    }
+                                    className="mb-3 flex-row items-center rounded-2xl bg-white px-4 py-4">
+                                    <View className="h-12 w-12 items-center justify-center rounded-full bg-primary-light">
+                                        <Ionicons
+                                            name="shield-checkmark"
+                                            size={25}
+                                            color="#0F6BFF"
+                                        />
+                                    </View>
+                                    <View className="ml-4 flex-1">
+                                        <Text className="font-pretendard-bold text-base text-text-default">
+                                            {portfolio.title}
+                                        </Text>
+                                        <Text className="mt-1 font-pretendard-medium text-xs text-text-secondary">
+                                            {CalcUtils.getPortfolioTags(portfolio)}
+                                        </Text>
+                                    </View>
+                                    <Text
+                                        className={`font-pretendard-bold ${portfolio.returnRate >= 0 ? "text-success-main" : "text-error-main"}`}>
+                                        {portfolio.returnRate >= 0 ? "+" : ""}
+                                        {portfolio.returnRate.toFixed(1)}%
+                                    </Text>
+                                    <Ionicons name="chevron-forward" size={18} color="#111827" />
+                                </Pressable>
+                            ))}
+                        </View>
+                    )}
                 </View>
             </ScrollView>
-        </SafeAreaView>
+
+            <View
+                className="absolute bottom-4 left-5 right-5 self-center"
+                style={{ maxWidth: 560 }}>
+                <Button onPress={() => router.push("/user/portfolio/create" as Href)}>
+                    + 포트폴리오 만들기
+                </Button>
+            </View>
+        </View>
     );
 }
 
-export default Dashboard;
+export default DashboardPage;

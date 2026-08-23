@@ -21,8 +21,7 @@ const solidButtonStyles: Record<ButtonColor, string> = {
     primary:
         "bg-primary-main border-primary-main hover:bg-primary-hover hover:border-primary-hover active:bg-primary-active active:border-primary-active",
 
-    secondary:
-        "bg-secondary-main border-secondary-main",
+    secondary: "bg-secondary-main border-secondary-main",
 
     error: "bg-error-main border-error-main",
 
@@ -35,8 +34,7 @@ const outlineButtonStyles: Record<ButtonColor, string> = {
     primary:
         "bg-transparent border-primary-main hover:border-primary-hover active:border-primary-active",
 
-    secondary:
-        "bg-transparent border-secondary-main",
+    secondary: "bg-transparent border-secondary-main",
 
     error: "bg-transparent border-error-main",
 

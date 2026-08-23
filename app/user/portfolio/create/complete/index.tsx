@@ -42,7 +42,7 @@ function PortfolioComplete() {
                                 시드머니
                             </Text>
                             <Text className="font-pretendard-bold text-base text-[#111827]">
-                                {formatWon(portfolio.seedMoney)}
+                                {formatWon(portfolio.totalSeedMoney)}
                             </Text>
                         </View>
                         <View className="flex-row items-center justify-between pt-4">
@@ -76,13 +76,6 @@ function PortfolioComplete() {
                         textClassName="text-base">
                         홈으로 돌아가기
                     </Button>
-                </View>
-
-                <View className="mt-5 flex-row items-center justify-center">
-                    <Text className="font-pretendard-bold text-sm text-[#6B7280]">✓</Text>
-                    <Text className="ml-1 font-pretendard-medium text-xs text-[#6B7280]">
-                        현재는 백엔드 연결 전 모의 생성 데이터입니다.
-                    </Text>
                 </View>
             </View>
         </ScrollView>

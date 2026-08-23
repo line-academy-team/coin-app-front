@@ -1,4 +1,3 @@
-
 import { Ionicons } from "@expo/vector-icons";
 import { CreatePortfolioItemRequest, PortfolioItem } from "@/types/portfolioItem";
 
@@ -17,6 +16,8 @@ export interface CreatePortfolioRequest {
     totalSeedMoney: number;
     items: CreatePortfolioItemRequest[];
 }
+
+export type UpdatePortfolioRequest = CreatePortfolioRequest;
 
 export interface PortfolioCoinOption {
     market: string;

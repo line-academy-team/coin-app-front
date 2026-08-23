@@ -42,8 +42,7 @@ function PortfolioStepIndicator({ activeStep }: PortfolioStepIndicatorProps) {
                                 </Text>
                             </View>
 
-                            <Text
-                                className={`mt-3 font-pretendard-semibold text-xs ${labelColor}`}>
+                            <Text className={`mt-3 font-pretendard-semibold text-xs ${labelColor}`}>
                                 {step.label}
                             </Text>
                         </View>

@@ -16,11 +16,6 @@ const formatKRW = (value: number) => {
     })}`;
 };
 
-/**
- * 큰 금액
- *
- * 조 / 억으로 표현
- */
 const formatLargeKRW = (value: number) => {
     if (value >= 1_000_000_000_000) {
         return `₩${(value / 1_000_000_000_000).toFixed(1)}조`;
@@ -75,8 +70,6 @@ function InfoCard({ title, value }: InfoCardProps) {
 export default function CoinInfo({ coin, realtimeData }: CoinInfoProps) {
     return (
         <View>
-            {/* 첫 번째 줄 */}
-
             <View
                 className="
                     flex-row
@@ -96,8 +89,6 @@ export default function CoinInfo({ coin, realtimeData }: CoinInfoProps) {
                     <InfoCard title="24시간 거래대금" value={formatLargeKRW(coin.tradePrice24h)} />
                 </View>
             </View>
-
-            {/* 두 번째 줄 */}
 
             <View
                 className="
@@ -119,8 +110,6 @@ export default function CoinInfo({ coin, realtimeData }: CoinInfoProps) {
                     <InfoCard title="최저가" value={formatKRW(coin.lowPrice)} />
                 </View>
             </View>
-
-            {/* 실시간 작은 그래프 */}
 
             <View
                 className="

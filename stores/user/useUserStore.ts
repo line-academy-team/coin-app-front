@@ -22,7 +22,6 @@ type UserState = {
 
 const TOKEN_KEY = "accessToken";
 
-
 const customWebStorage: StateStorage = {
     getItem: name => {
         if (typeof window === "undefined") {
@@ -45,12 +44,10 @@ const customWebStorage: StateStorage = {
     },
 };
 
-
 const storage =
     Platform.OS === "web"
         ? createJSONStorage(() => customWebStorage)
         : createJSONStorage(() => AsyncStorage);
-
 
 const saveAccessToken = async (token: string, autoLogin: boolean) => {
     if (Platform.OS === "web") {
@@ -76,7 +73,6 @@ const saveAccessToken = async (token: string, autoLogin: boolean) => {
     }
 };
 
-
 const getAccessToken = async () => {
     if (Platform.OS === "web") {
         if (typeof window === "undefined") {
@@ -88,7 +84,6 @@ const getAccessToken = async () => {
 
     return await SecureStore.getItemAsync(TOKEN_KEY);
 };
-
 
 const removeAccessToken = async () => {
     if (Platform.OS === "web") {
@@ -108,7 +103,6 @@ const removeAccessToken = async () => {
 export const useUserStore = create<UserState>()(
     persist(
         set => ({
-
             isLoggedIn: false,
 
             token: null,
@@ -125,7 +119,6 @@ export const useUserStore = create<UserState>()(
                 });
             },
 
-
             logout: async () => {
                 await removeAccessToken();
 
@@ -135,7 +128,6 @@ export const useUserStore = create<UserState>()(
                     user: null,
                 });
             },
-
 
             updateUserInfo: userInfo =>
                 set(state => {
@@ -151,10 +143,8 @@ export const useUserStore = create<UserState>()(
                     };
                 }),
 
-
             restoreLogin: async () => {
                 const token = await getAccessToken();
-
 
                 if (!token) {
                     set({
@@ -166,14 +156,12 @@ export const useUserStore = create<UserState>()(
                     return;
                 }
 
-
                 set({
                     token,
                 });
 
                 try {
-
-                    const userApi = require("@/api/user/userApi").default;
+                    const userApi = (await import("@/api/user/userApi")).default;
 
                     const user = await userApi.getMe();
 
@@ -182,9 +170,7 @@ export const useUserStore = create<UserState>()(
                         token,
                         user,
                     });
-                } catch (error) {
-                    console.error("로그인 복원 실패:", error);
-
+                } catch {
                     await removeAccessToken();
 
                     set({

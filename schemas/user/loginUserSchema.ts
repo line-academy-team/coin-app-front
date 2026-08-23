@@ -1,4 +1,4 @@
-import z from "zod";
+import { z } from "zod";
 
 export const loginSchema = z.object({
     email: z.email("유효한 이메일 주소를 입력해주세요.").min(1, "이메일을 입력해주세요."),

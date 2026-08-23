@@ -33,7 +33,6 @@ export interface UpbitTicker {
     timestamp: number;
 }
 
-
 export interface Coin {
     market: string;
 
@@ -45,7 +44,6 @@ export interface Coin {
     price: number;
     changeRate: number;
 }
-
 
 export interface CoinDetail extends Coin {
     changePrice: number;
@@ -60,7 +58,6 @@ export interface CoinDetail extends Coin {
 
     timestamp: number;
 }
-
 
 export interface RealtimePricePoint {
     timestamp: number;

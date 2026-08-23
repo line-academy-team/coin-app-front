@@ -62,9 +62,7 @@ function IndexPage() {
                 }
 
                 router.replace("/user");
-            } catch (error) {
-                console.error("초기 로그인 검증 실패:", error);
-
+            } catch {
                 await useUserStore.getState().logout();
 
                 if (isMounted) {

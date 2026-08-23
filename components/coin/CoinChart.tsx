@@ -68,8 +68,6 @@ export default function CoinChart({ coin, realtimeData }: CoinChartProps) {
 
     return (
         <View>
-            {/* 차트 제목 */}
-
             <View
                 className="
                     mb-3
@@ -115,11 +113,7 @@ export default function CoinChart({ coin, realtimeData }: CoinChartProps) {
                 </View>
             </View>
 
-            {/* 큰 실시간 차트 */}
-
             <CoinLineChart data={realtimeData} height={200} showTime />
-
-            {/* 실시간 데이터 개수 */}
 
             <Text
                 className="
@@ -131,8 +125,6 @@ export default function CoinChart({ coin, realtimeData }: CoinChartProps) {
                 {realtimeData.length}
                 /60 데이터
             </Text>
-
-            {/* 가격 정보 */}
 
             <View
                 className="

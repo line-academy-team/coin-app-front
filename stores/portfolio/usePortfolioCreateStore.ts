@@ -1,10 +1,6 @@
 import { create } from "zustand";
 
-import {
-    CreatedPortfolio,
-    PortfolioAllocation,
-    PortfolioCoinOption,
-} from "@/types/portfolio";
+import { Portfolio, PortfolioAllocation, PortfolioCoinOption } from "@/types/portfolio";
 
 export const RECOMMENDED_PORTFOLIO_COINS: PortfolioAllocation[] = [
     {
@@ -34,19 +30,18 @@ interface PortfolioCreateState {
     name: string;
     seedMoney: number;
     coins: PortfolioAllocation[];
-    createdPortfolio: CreatedPortfolio | null;
+    createdPortfolio: Portfolio | null;
     setBasics: (name: string, seedMoney: number) => void;
     ensureRecommendedCoins: () => void;
     syncCoinMarketData: (coins: PortfolioCoinOption[]) => void;
     toggleCoin: (coin: PortfolioCoinOption) => void;
     setAllocation: (market: string, allocation: number) => void;
     changeAllocation: (market: string, direction: -1 | 1) => void;
-    setCreatedPortfolio: (portfolio: CreatedPortfolio) => void;
+    setCreatedPortfolio: (portfolio: Portfolio) => void;
     resetDraft: () => void;
 }
 
-const clampAllocation = (allocation: number) =>
-    Math.min(100, Math.max(0, Math.round(allocation)));
+const clampAllocation = (allocation: number) => Math.min(100, Math.max(0, Math.round(allocation)));
 
 export const usePortfolioCreateStore = create<PortfolioCreateState>(set => ({
     name: "",

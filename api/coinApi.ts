@@ -2,7 +2,6 @@ import { Coin, CoinDetail, UpbitMarket, UpbitTicker } from "@/types/coin";
 
 const UPBIT_API_URL = "https://api.upbit.com/v1";
 
-
 export const getCoins = async (): Promise<Coin[]> => {
     const [marketResponse, tickerResponse] = await Promise.all([
         fetch(`${UPBIT_API_URL}/market/all`),
@@ -45,7 +44,6 @@ export const getCoins = async (): Promise<Coin[]> => {
         });
 };
 
-
 export const getCoin = async (market: string): Promise<CoinDetail> => {
     const [marketResponse, tickerResponse] = await Promise.all([
         fetch(`${UPBIT_API_URL}/market/all`),
@@ -82,34 +80,25 @@ export const getCoin = async (market: string): Promise<CoinDetail> => {
 
         englishName: marketInfo?.english_name ?? "",
 
-
         price: ticker.trade_price,
-
 
         changePrice: ticker.signed_change_price,
 
-
         changeRate: ticker.signed_change_rate * 100,
-
 
         openingPrice: ticker.opening_price,
 
-
         highPrice: ticker.high_price,
-
 
         lowPrice: ticker.low_price,
 
-
         tradePrice24h: ticker.acc_trade_price_24h,
-
 
         tradeVolume24h: ticker.acc_trade_volume_24h,
 
         timestamp: ticker.timestamp,
     };
 };
-
 
 export const getCoinTicker = async (market: string): Promise<UpbitTicker> => {
     const response = await fetch(`${UPBIT_API_URL}/ticker?markets=${encodeURIComponent(market)}`);

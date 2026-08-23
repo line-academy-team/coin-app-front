@@ -2,7 +2,7 @@ import { Href, router } from "expo-router";
 import { useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 
-import { createPortfolioMock } from "@/api/user/portfolioApi";
+import portfolioApi from "@/api/user/portfolioApi";
 import MainHeader from "@/components/layout/MainHeader";
 import PortfolioBottomActions from "@/components/portfolio/PortfolioBottomActions";
 import {
@@ -12,6 +12,7 @@ import {
 } from "@/components/portfolio/portfolioFormat";
 import PortfolioStepIndicator from "@/components/portfolio/PortfolioStepIndicator";
 import { usePortfolioCreateStore } from "@/stores/portfolio/usePortfolioCreateStore";
+import { CreatePortfolioRequest } from "@/types/portfolio";
 
 function PortfolioConfirm() {
     const name = usePortfolioCreateStore(state => state.name);
@@ -33,7 +34,26 @@ function PortfolioConfirm() {
             setIsSubmitting(true);
             setError(null);
 
-            const createdPortfolio = await createPortfolioMock({ name, seedMoney, coins });
+            const requestData: CreatePortfolioRequest = {
+                title: name,
+                totalSeedMoney: seedMoney,
+                items: coins.map(coin => {
+                    const estimate = getEstimatedPurchase(
+                        seedMoney,
+                        coin.allocation,
+                        coin.currentPrice,
+                    );
+
+                    return {
+                        market: coin.market,
+                        targetRatio: coin.allocation,
+                        buyPrice: coin.currentPrice,
+                        quantity: estimate.quantity,
+                    };
+                }),
+            };
+
+            const createdPortfolio = await portfolioApi.createPortfolio(requestData);
             setCreatedPortfolio(createdPortfolio);
             router.replace("/user/portfolio/create/complete" as Href);
         } catch (submitError) {
