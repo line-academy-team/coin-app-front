@@ -11,7 +11,7 @@ import { Href, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useMemo, useState } from "react";
 
-import { getCoins } from "@/api/coin";
+import { getCoins } from "@/api/coinApi";
 import { Coin } from "@/types/coin";
 import MainHeader from "@/components/layout/MainHeader";
 

@@ -1,7 +1,8 @@
-import { Pressable, Text, TextInput, TextInputProps, View } from "react-native";
-import { useState } from "react";
+import { Image, Pressable, Text, TextInput, TextInputProps, View } from "react-native";
 import { twMerge } from "tailwind-merge";
-import { Ionicons } from "@expo/vector-icons";
+import { useState } from "react";
+import ErrorMessage from "../form/ErrorMessage";
+import InfoMessage from "../form/InfoMessage";
 
 interface InputGroupProps extends TextInputProps {
     label: string;
@@ -22,13 +23,13 @@ function InputGroup({
     const [visibility, setVisibility] = useState(false);
 
     return (
-        <View>
-            <Text className="font-pretendard-semibold text-lg text-text-default mb-2">{label}</Text>
+        <View className="mt-[18px]">
+            <Text className={"text-text-default font-pretendard-semibold text-lg py-2"}>{label}</Text>
             <TextInput
                 className={twMerge(
-                    "items-center px-5 py-4 mb-1 rounded-xl",
-                    "border border-text-disabled",
-                    "focus:outline-primary-main",
+                    "h-12 px-3 relative font-pretendard-normal",
+                    "bg-background-paper rounded-xl border border-text-disabled",
+                    "focus:outline-secondary-main",
                     errorMessage && "border-error-main",
                 )}
                 placeholder={placeholder}
@@ -37,25 +38,25 @@ function InputGroup({
             />
             {isPassword && (
                 <Pressable
-                    className={twMerge("h-6 w-6 absolute", "right-5 top-12")}
+                    className={twMerge("h-5 w-5 absolute", "right-7 top-[53px]")}
                     onPress={() => {
                         setVisibility(!visibility);
                     }}>
-                    {visibility ? (
-                        <Ionicons
-                            name={"eye-off-outline"}
-                            size={24}
-                            className="text-text-secondary"
-                        />
-                    ) : (
-                        <Ionicons name={"eye-outline"} size={24} className="text-text-secondary" />
-                    )}
+                    <Image
+                        source={
+                            visibility
+                                ? require("@/assets/images/auth/visibility_off.png")
+                                : require("@/assets/images/auth/visibility.png")
+                        }
+                        resizeMode="contain"
+                        style={{ width: 28, height: 28 }}
+                    />
                 </Pressable>
             )}
             {errorMessage ? (
-                <Text className={"text-error-main text-sm font-pretendard"}>{errorMessage}</Text>
-            ) : infoMessage ?(
-                <Text className={"text-text-secondary text-sm font-pretendard"}>{infoMessage}</Text>
+                <ErrorMessage>{errorMessage}</ErrorMessage>
+            ) : infoMessage ? (
+                <InfoMessage>{infoMessage}</InfoMessage>
             ) : null}
         </View>
     );

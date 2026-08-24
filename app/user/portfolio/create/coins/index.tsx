@@ -9,7 +9,7 @@ import {
     View,
 } from "react-native";
 
-import { getCoins } from "@/api/coin";
+import { getCoins } from "@/api/coinApi";
 import MainHeader from "@/components/layout/MainHeader";
 import PortfolioBottomActions from "@/components/portfolio/PortfolioBottomActions";
 import {

@@ -2,14 +2,15 @@ export interface User {
     id: number;
     email: string;
     nickname: string;
-    createdAt: string;
+}
+
+export interface AuthUser extends User {}
+
+export interface LoginResponse {
+    user: User;
+    token: string;
 }
 
 export interface GetMeResponse {
-    message: string;
-    data: User;
+    user: User;
 }
-
-export type LoginResponse = User & {
-    token: string;
-};

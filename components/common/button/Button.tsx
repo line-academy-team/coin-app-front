@@ -75,14 +75,14 @@ function Button({
 
     const buttonStyle = isDisabled
         ? variant === "solid"
-            ? "bg-background-deep border-divider"
+            ? "bg-divider border-text-disabled"
             : "bg-transparent border-divider"
         : variant === "solid"
           ? solidButtonStyles[color]
           : outlineButtonStyles[color];
 
     const textStyle = isDisabled
-        ? "text-text-disabled"
+        ? "text-text-secondary"
         : variant === "solid"
           ? solidTextStyles[color]
           : outlineTextStyles[color];

@@ -2,7 +2,7 @@ import { Href, router } from "expo-router";
 import { useState } from "react";
 import { ScrollView, Text, View } from "react-native";
 
-import { createPortfolioMock } from "@/api/portfolio";
+import { createPortfolioMock } from "@/api/user/portfolioApi";
 import MainHeader from "@/components/layout/MainHeader";
 import PortfolioBottomActions from "@/components/portfolio/PortfolioBottomActions";
 import {
@@ -111,7 +111,8 @@ function PortfolioConfirm() {
                                                 {coin.koreanName}
                                             </Text>
                                             <Text className="mt-0.5 font-pretendard-medium text-xs text-[#6B7280]">
-                                                {coin.symbol} · 기준가 {formatWon(coin.currentPrice)}
+                                                {coin.symbol} · 기준가{" "}
+                                                {formatWon(coin.currentPrice)}
                                             </Text>
                                         </View>
                                         <View className="ml-3 min-w-[58px] rounded-xl bg-white px-2 py-2.5">
@@ -135,7 +136,8 @@ function PortfolioConfirm() {
                                                 예상 구매
                                             </Text>
                                             <Text className="mt-1 text-right font-pretendard-bold text-sm text-[#0F6BFF]">
-                                                약 {formatCoinQuantity(estimate.quantity)} {coin.symbol}
+                                                약 {formatCoinQuantity(estimate.quantity)}{" "}
+                                                {coin.symbol}
                                             </Text>
                                         </View>
                                     </View>
@@ -163,8 +165,8 @@ function PortfolioConfirm() {
                                 유의사항
                             </Text>
                             <Text className="mt-1 font-pretendard-medium text-sm leading-5 text-[#6B7280]">
-                                이 시뮬레이션은 실제 매매가 아닌 가상 매매 시뮬레이션입니다.
-                                실제 주문이나 자금 전송은 발생하지 않으며, 예상 구매 수량은 현재가
+                                이 시뮬레이션은 실제 매매가 아닌 가상 매매 시뮬레이션입니다. 실제
+                                주문이나 자금 전송은 발생하지 않으며, 예상 구매 수량은 현재가
                                 기준이라 실제 시세에 따라 달라질 수 있습니다.
                             </Text>
                         </View>
@@ -184,7 +186,9 @@ function PortfolioConfirm() {
                 nextLabel="포트폴리오 생성"
                 onPrevious={() => router.back()}
                 onNext={() => void handleCreate()}
-                nextDisabled={!name || seedMoney <= 0 || coins.length === 0 || totalAllocation !== 100}
+                nextDisabled={
+                    !name || seedMoney <= 0 || coins.length === 0 || totalAllocation !== 100
+                }
                 isLoading={isSubmitting}
             />
         </View>

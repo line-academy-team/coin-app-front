@@ -2,13 +2,7 @@ import { Coin, CoinDetail, UpbitMarket, UpbitTicker } from "@/types/coin";
 
 const UPBIT_API_URL = "https://api.upbit.com/v1";
 
-/**
- * ==========================================
- * 전체 KRW 코인 목록
- * ==========================================
- *
- * 코인 검색 페이지에서 사용
- */
+
 export const getCoins = async (): Promise<Coin[]> => {
     const [marketResponse, tickerResponse] = await Promise.all([
         fetch(`${UPBIT_API_URL}/market/all`),
@@ -51,16 +45,7 @@ export const getCoins = async (): Promise<Coin[]> => {
         });
 };
 
-/**
- * ==========================================
- * 상세 페이지 최초 조회
- * ==========================================
- *
- * 처음 페이지가 열렸을 때
- *
- * 코인 이름 + 현재가 상세 정보를
- * 함께 가져오기 위해 사용
- */
+
 export const getCoin = async (market: string): Promise<CoinDetail> => {
     const [marketResponse, tickerResponse] = await Promise.all([
         fetch(`${UPBIT_API_URL}/market/all`),
@@ -97,65 +82,35 @@ export const getCoin = async (market: string): Promise<CoinDetail> => {
 
         englishName: marketInfo?.english_name ?? "",
 
-        /**
-         * 현재가
-         */
+
         price: ticker.trade_price,
 
-        /**
-         * 전일 대비 가격 변화액
-         */
+
         changePrice: ticker.signed_change_price,
 
-        /**
-         * 전일 대비 가격 변화율
-         *
-         * 0.0124
-         * ->
-         * 1.24
-         */
+
         changeRate: ticker.signed_change_rate * 100,
 
-        /**
-         * 시가
-         */
+
         openingPrice: ticker.opening_price,
 
-        /**
-         * 최고가
-         */
+
         highPrice: ticker.high_price,
 
-        /**
-         * 최저가
-         */
+
         lowPrice: ticker.low_price,
 
-        /**
-         * 최근 24시간 누적 거래대금
-         */
+
         tradePrice24h: ticker.acc_trade_price_24h,
 
-        /**
-         * 최근 24시간 누적 거래량
-         */
+
         tradeVolume24h: ticker.acc_trade_volume_24h,
 
         timestamp: ticker.timestamp,
     };
 };
 
-/**
- * ==========================================
- * 실시간 현재가 조회
- * ==========================================
- *
- * 이 함수가 상세페이지에서
- * 1초마다 반복 실행됨
- *
- * market:
- * KRW-BTC
- */
+
 export const getCoinTicker = async (market: string): Promise<UpbitTicker> => {
     const response = await fetch(`${UPBIT_API_URL}/ticker?markets=${encodeURIComponent(market)}`);
 

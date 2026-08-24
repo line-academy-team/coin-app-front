@@ -6,7 +6,7 @@ import { Href, router, useFocusEffect, useLocalSearchParams } from "expo-router"
 
 import { Ionicons } from "@expo/vector-icons";
 
-import { getCoin, getCoinTicker } from "@/api/coin";
+import { getCoin, getCoinTicker } from "@/api/coinApi";
 
 import { CoinDetail, RealtimePricePoint } from "@/types/coin";
 

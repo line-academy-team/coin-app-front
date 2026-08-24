@@ -47,21 +47,14 @@ function MainHeader({
 
     return (
         <>
-
             <View className="w-full h-[80px] flex-row items-center justify-between px-5 relative">
-
                 {isBackPress ? (
-                    <Pressable
-                        onPress={onBackPress ?? (() => router.back())}
-                        className="w-10 h-10 items-center justify-center z-10">
-                        <Text className="font-pretendard-regular text-[38px] leading-[38px] text-text-default">
-                            ‹
-                        </Text>
+                    <Pressable onPress={onBackPress ? onBackPress : () => router.back()}>
+                        <Ionicons name={"chevron-back-outline"} size={24} />
                     </Pressable>
                 ) : (
                     <View className="w-10 h-10" />
                 )}
-
 
                 <View
                     pointerEvents="none"
@@ -75,7 +68,6 @@ function MainHeader({
                     )}
                 </View>
 
-
                 {showMenu ? (
                     <Pressable
                         onPress={() => setModalVisible(true)}
@@ -86,7 +78,6 @@ function MainHeader({
                     <View className="w-10 h-10" />
                 )}
             </View>
-
 
             <Modal
                 visible={isModalVisible}
@@ -105,7 +96,6 @@ function MainHeader({
                                 마이페이지
                             </Text>
                         </TouchableOpacity>
-
 
                         <TouchableOpacity
                             onPress={handleLogout}
