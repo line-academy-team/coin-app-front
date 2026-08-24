@@ -23,10 +23,6 @@ export default function CoinLineChart({
 
     const paddingY = 15;
 
-    /**
-     * 최소 2개의 데이터가 있어야
-     * 선을 그릴 수 있음
-     */
     if (data.length < 2) {
         return (
             <View
@@ -65,18 +61,11 @@ export default function CoinLineChart({
 
     const maxPrice = Math.max(...prices);
 
-    /**
-     * 실제 SVG 좌표 생성
-     */
     const coordinates = data.map((item, index) => {
         const x = paddingX + (index / (data.length - 1)) * (chartWidth - paddingX * 2);
 
         let y = height / 2;
 
-        /**
-         * 최고가와 최저가가
-         * 다를 때만 계산
-         */
         if (maxPrice !== minPrice) {
             const priceRate = (item.price - minPrice) / (maxPrice - minPrice);
 
@@ -101,8 +90,6 @@ export default function CoinLineChart({
 
     return (
         <View>
-            {/* 그래프 */}
-
             <View
                 className="
                     overflow-hidden
@@ -110,8 +97,6 @@ export default function CoinLineChart({
                     bg-[#EEF5FF]
                 ">
                 <Svg width="100%" height={height} viewBox={`0 0 ${chartWidth} ${height}`}>
-                    {/* 중앙 가이드라인 */}
-
                     <Line
                         x1="0"
                         y1={height / 2}
@@ -120,8 +105,6 @@ export default function CoinLineChart({
                         stroke="#DCE8F8"
                         strokeWidth="1"
                     />
-
-                    {/* 실시간 가격 선 */}
 
                     <Polyline
                         points={points}
@@ -132,13 +115,9 @@ export default function CoinLineChart({
                         strokeLinejoin="round"
                     />
 
-                    {/* 가장 최근 가격 위치 */}
-
                     {lastPoint && <Circle cx={lastPoint.x} cy={lastPoint.y} r="4" fill="#2288ED" />}
                 </Svg>
             </View>
-
-            {/* 시간 */}
 
             {showTime && (
                 <View

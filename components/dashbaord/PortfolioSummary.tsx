@@ -20,15 +20,29 @@ function PortfolioSummary() {
                     ["flex-row", "justify-between"],
                 )}>
                 <View>
-                    <Text className={twMerge(["font-pretendard-semibold text-text-light"])}>총자산</Text>
-                    <Text className={twMerge(["font-pretendard-semibold text-text-light"])}>￦32,430,250</Text>
-                    <Text className={twMerge(["font-pretendard-semibold text-text-light"])}>평가손익 +￦2,430,250</Text>
+                    <Text className={twMerge(["font-pretendard-semibold text-text-light"])}>
+                        총자산
+                    </Text>
+                    <Text className={twMerge(["font-pretendard-semibold text-text-light"])}>
+                        ￦32,430,250
+                    </Text>
+                    <Text className={twMerge(["font-pretendard-semibold text-text-light"])}>
+                        평가손익 +￦2,430,250
+                    </Text>
                     <View className={"flex-row"}>
-                        <Text className={twMerge(["font-pretendard-semibold text-text-light"])}>수익률</Text>
+                        <Text className={twMerge(["font-pretendard-semibold text-text-light"])}>
+                            수익률
+                        </Text>
                         <View
                             className={twMerge(
                                 ["text-text-light", "font-pretendard-semibold", "text-base"],
-                                ["p-3", "rounded-xl", "bg-[#FFFFFF/10]","border", "border-divider"],
+                                [
+                                    "p-3",
+                                    "rounded-xl",
+                                    "bg-[#FFFFFF/10]",
+                                    "border",
+                                    "border-divider",
+                                ],
                             )}>
                             +8.10%
                         </View>

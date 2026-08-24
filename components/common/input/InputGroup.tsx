@@ -24,7 +24,9 @@ function InputGroup({
 
     return (
         <View className="mt-[18px]">
-            <Text className={"text-text-default font-pretendard-semibold text-lg py-2"}>{label}</Text>
+            <Text className={"text-text-default font-pretendard-semibold text-lg py-2"}>
+                {label}
+            </Text>
             <TextInput
                 className={twMerge(
                     "h-12 px-3 relative font-pretendard-normal",

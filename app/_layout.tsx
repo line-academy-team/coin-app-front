@@ -8,9 +8,8 @@ import { useFonts } from "expo-font";
 import { useEffect } from "react";
 import { useThemeStore } from "@/stores/theme/useThemeStore";
 
-
 export const unstable_settings = {
-    anchor: "user/(tabs)",
+    anchor: "user",
 };
 
 SplashScreen.preventAutoHideAsync().then(() => {});

@@ -17,6 +17,8 @@ export interface CreatePortfolioRequest {
     items: CreatePortfolioItemRequest[];
 }
 
+export type UpdatePortfolioRequest = CreatePortfolioRequest;
+
 export interface PortfolioCoinOption {
     market: string;
     symbol: string;

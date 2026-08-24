@@ -2,9 +2,10 @@ export interface User {
     id: number;
     email: string;
     nickname: string;
+    createdAt?: string;
 }
 
-export interface AuthUser extends User {}
+export type AuthUser = User;
 
 export interface LoginResponse {
     user: User;

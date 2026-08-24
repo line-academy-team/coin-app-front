@@ -11,14 +11,12 @@ import {
     View,
 } from "react-native";
 import { isAxiosError } from "axios";
-import { Ionicons } from "@expo/vector-icons";
 import InputGroup from "@/components/common/input/InputGroup";
 import ErrorMessage from "@/components/common/form/ErrorMessage";
 import { RegisterUserInputType, registerUserSchema } from "@/schemas/user/registerUserSchema";
 import Button from "@/components/common/button/Button";
 import userApi from "@/api/user/userApi";
 import MainHeader from "@/components/layout/MainHeader";
-import { twMerge } from "tailwind-merge";
 function AuthRegisterPage() {
     const router = useRouter();
 
@@ -156,7 +154,8 @@ function AuthRegisterPage() {
                         disabled={!isFilled}
                         isLoading={isSubmitting}
                         onPress={handleSubmit(onSubmit)}
-                        variant={"solid"} color={"primary"}
+                        variant={"solid"}
+                        color={"primary"}
                         className={"mt-10"}>
                         회원가입
                     </Button>

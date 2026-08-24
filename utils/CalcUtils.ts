@@ -1,49 +1,53 @@
 import { CalculatedPortfolio, Portfolio } from "@/types/portfolio";
+import { Coin } from "@/types/coin";
 
 const calculatePortfolioReturns = (
     portfolios: Portfolio[],
-    upbitCoins: any[],
+    upbitCoins: Coin[],
 ): CalculatedPortfolio[] => {
-    // 업비트 현재가를 쉽게 찾기 위한 Map 생성
     const currentPriceMap = new Map<string, number>(
         upbitCoins.map(coin => [coin.market, coin.price]),
     );
 
     return portfolios.map(portfolio => {
-        let totalReturnRate = 0;
-
-        // 코인이 없으면 수익률 0, 현재 가치는 원금 그대로 반환 (items -> coins로 수정)
         if (!portfolio.coins || portfolio.coins.length === 0) {
             return {
                 ...portfolio,
                 returnRate: 0,
-                currentTotalValue: portfolio.totalSeedMoney, // totalAmount -> totalSeedMoney
+                currentTotalValue: portfolio.totalSeedMoney,
             };
         }
+
+        let currentTotalValue = 0;
 
         portfolio.coins.forEach(coin => {
             const currentPrice = currentPriceMap.get(coin.market);
 
-            if (currentPrice && coin.buyPrice > 0) {
-                // 개별 코인 수익률 (%)
-                const coinReturnRate = ((currentPrice - coin.buyPrice) / coin.buyPrice) * 100;
-
-                // 포트폴리오 전체 수익률에 비중(targetRatio)만큼 반영
-                totalReturnRate += coinReturnRate * (coin.targetRatio / 100);
-            }
+            currentTotalValue += currentPrice
+                ? currentPrice * coin.quantity
+                : portfolio.totalSeedMoney * (coin.targetRatio / 100);
         });
 
-        // 현재 총 자산 가치 계산
-        const currentTotalValue = portfolio.totalSeedMoney * (1 + totalReturnRate / 100);
+        const totalReturnRate =
+            portfolio.totalSeedMoney > 0
+                ? ((currentTotalValue - portfolio.totalSeedMoney) / portfolio.totalSeedMoney) * 100
+                : 0;
 
         return {
             ...portfolio,
             returnRate: Number(totalReturnRate.toFixed(2)),
-            currentTotalValue: Math.floor(currentTotalValue), // 원단위 절사
+            currentTotalValue: Math.floor(currentTotalValue),
         };
     });
 };
 
+const getPortfolioTags = (portfolio: Portfolio) =>
+    portfolio.coins
+        .slice(0, 3)
+        .map(coin => `${coin.market.split("-")[1]} ${Number(coin.targetRatio)}%`)
+        .join(" · ");
+
 export default {
     calculatePortfolioReturns,
+    getPortfolioTags,
 };

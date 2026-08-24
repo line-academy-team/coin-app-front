@@ -1,13 +1,6 @@
 import { Href, router, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import {
-    ActivityIndicator,
-    FlatList,
-    Pressable,
-    Text,
-    TextInput,
-    View,
-} from "react-native";
+import { ActivityIndicator, FlatList, Pressable, Text, TextInput, View } from "react-native";
 
 import { getCoins } from "@/api/coinApi";
 import MainHeader from "@/components/layout/MainHeader";
@@ -118,8 +111,7 @@ function PortfolioCoins() {
                     });
                 }
             }
-        } catch (loadError) {
-            console.error(loadError);
+        } catch {
             setError("업비트 코인 정보를 불러오지 못했습니다.");
         } finally {
             setIsLoading(false);
@@ -157,9 +149,7 @@ function PortfolioCoins() {
         return (
             <View
                 className={`mb-3 rounded-2xl border px-3 py-4 ${
-                    selectedCoin
-                        ? "border-[#DCE8FA] bg-[#EEF4FB]"
-                        : "border-[#E5E9F0] bg-white"
+                    selectedCoin ? "border-[#DCE8FA] bg-[#EEF4FB]" : "border-[#E5E9F0] bg-white"
                 }`}>
                 <View className="flex-row items-center">
                     <Pressable
@@ -252,7 +242,8 @@ function PortfolioCoins() {
                             예상 투자금 {formatWon(estimate.investmentAmount)}
                         </Text>
                         <Text className="font-pretendard-semibold text-xs text-[#0F6BFF]">
-                            약 {formatCoinQuantity(estimate.quantity)} {selectedCoin.symbol} 예상 구매
+                            약 {formatCoinQuantity(estimate.quantity)} {selectedCoin.symbol} 예상
+                            구매
                         </Text>
                     </View>
                 )}
@@ -283,7 +274,9 @@ function PortfolioCoins() {
                         <Pressable
                             onPress={() => void loadCoins()}
                             className="mt-5 rounded-xl bg-[#0F6BFF] px-6 py-3">
-                            <Text className="font-pretendard-bold text-sm text-white">다시 시도</Text>
+                            <Text className="font-pretendard-bold text-sm text-white">
+                                다시 시도
+                            </Text>
                         </Pressable>
                     </View>
                 ) : (
@@ -341,14 +334,14 @@ function PortfolioCoins() {
                                     <Text className="font-pretendard-bold text-base text-[#6B7280]">
                                         전체비율
                                     </Text>
-                                <Text className="mt-1 font-pretendard-medium text-xs text-[#A7B0BE]">
-                                    {coins.length}개 자산 선택
-                                </Text>
-                                {totalAllocation !== 100 && (
-                                    <Text className="mt-1 font-pretendard-medium text-xs text-[#EF4444]">
-                                        다음 단계는 합계 100%일 때 진행할 수 있어요.
+                                    <Text className="mt-1 font-pretendard-medium text-xs text-[#A7B0BE]">
+                                        {coins.length}개 자산 선택
                                     </Text>
-                                )}
+                                    {totalAllocation !== 100 && (
+                                        <Text className="mt-1 font-pretendard-medium text-xs text-[#EF4444]">
+                                            다음 단계는 합계 100%일 때 진행할 수 있어요.
+                                        </Text>
+                                    )}
                                 </View>
                                 <Text
                                     className={`font-pretendard-bold text-xl ${
