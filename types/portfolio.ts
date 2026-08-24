@@ -1,4 +1,3 @@
-
 import { Ionicons } from "@expo/vector-icons";
 import { CreatePortfolioItemRequest, PortfolioItem } from "@/types/portfolioItem";
 

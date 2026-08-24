@@ -7,6 +7,11 @@ const getMyPortfolios = async (): Promise<Portfolio[]> => {
     return response.data.data;
 };
 
+const getMyPortfolioById = async (id: number): Promise<Portfolio> => {
+    const response = await axiosInstance.get(`/portfolios/${id}`);
+    return response.data.data;
+}
+
 const createPortfolio = async (data: CreatePortfolioRequest): Promise<Portfolio> => {
     const response = await axiosInstance.post("/portfolios/create", data);
     return response.data.data;
@@ -14,5 +19,6 @@ const createPortfolio = async (data: CreatePortfolioRequest): Promise<Portfolio>
 
 export default {
     getMyPortfolios,
+    getMyPortfolioById,
     createPortfolio,
 };
