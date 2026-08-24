@@ -1,6 +1,6 @@
 import { Href, router, useLocalSearchParams } from "expo-router";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { ActivityIndicator, FlatList, Pressable, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, FlatList, Pressable, ScrollView, Text, TextInput, View } from "react-native";
 
 import { getCoins } from "@/api/coinApi";
 import MainHeader from "@/components/layout/MainHeader";
@@ -151,102 +151,106 @@ function PortfolioCoins() {
                 className={`mb-3 rounded-2xl border px-3 py-4 ${
                     selectedCoin ? "border-[#DCE8FA] bg-[#EEF4FB]" : "border-[#E5E9F0] bg-white"
                 }`}>
-                <View className="flex-row items-center">
-                    <Pressable
-                        onPress={() =>
-                            toggleCoin({
-                                market: item.market,
-                                symbol: item.symbol,
-                                koreanName: item.koreanName,
-                                currentPrice: item.price,
-                            })
-                        }
-                        accessibilityRole="checkbox"
-                        accessibilityState={{ checked: Boolean(selectedCoin) }}
-                        hitSlop={8}
-                        className={`h-6 w-6 items-center justify-center rounded border-2 ${
-                            selectedCoin
-                                ? "border-[#3B82F6] bg-[#3B82F6]"
-                                : "border-[#6B7280] bg-white"
-                        }`}>
-                        {selectedCoin && (
-                            <Text className="font-pretendard-bold text-base text-white">✓</Text>
-                        )}
-                    </Pressable>
-
-                    <Pressable
-                        onPress={() =>
-                            toggleCoin({
-                                market: item.market,
-                                symbol: item.symbol,
-                                koreanName: item.koreanName,
-                                currentPrice: item.price,
-                            })
-                        }
-                        className="ml-3 flex-1 flex-row items-center">
-                        <View className="h-11 w-11 items-center justify-center rounded-full bg-[#11B5D0]">
-                            <Text className="font-pretendard-bold text-sm text-white">
-                                {item.symbol.slice(0, 1)}
-                            </Text>
-                        </View>
-                        <View className="ml-3 flex-1">
-                            <Text
-                                numberOfLines={1}
-                                className="font-pretendard-bold text-base text-[#111827]">
-                                {item.koreanName}
-                            </Text>
-                            <Text
-                                numberOfLines={1}
-                                className="mt-0.5 font-pretendard-medium text-xs text-[#6B7280]">
-                                {item.symbol} · ₩{item.price.toLocaleString("ko-KR")}
-                            </Text>
-                        </View>
-                    </Pressable>
-                </View>
-
-                {selectedCoin && (
-                    <View className="mt-4 flex-row items-center">
+                    <View className="flex-row items-center">
                         <Pressable
-                            onPress={() => changeAllocation(item.market, -1)}
-                            accessibilityLabel={`${item.koreanName} 비중 줄이기`}
-                            className="h-9 w-9 items-center justify-center rounded-full bg-white active:bg-[#E5E9F0]">
-                            <Text className="font-pretendard-bold text-xl text-[#0F6BFF]">−</Text>
+                            onPress={() =>
+                                toggleCoin({
+                                    market: item.market,
+                                    symbol: item.symbol,
+                                    koreanName: item.koreanName,
+                                    currentPrice: item.price,
+                                })
+                            }
+                            accessibilityRole="checkbox"
+                            accessibilityState={{ checked: Boolean(selectedCoin) }}
+                            hitSlop={8}
+                            className={`h-6 w-6 items-center justify-center rounded border-2 ${
+                                selectedCoin
+                                    ? "border-[#3B82F6] bg-[#3B82F6]"
+                                    : "border-[#6B7280] bg-white"
+                            }`}>
+                            {selectedCoin && (
+                                <Text className="font-pretendard-bold text-base text-white">✓</Text>
+                            )}
                         </Pressable>
 
-                        <View className="mx-3 h-2 flex-1 overflow-hidden rounded-full bg-white">
-                            <View
-                                className="h-full rounded-full bg-[#0F6BFF]"
-                                style={{ width: `${selectedCoin.allocation}%` }}
+                        <Pressable
+                            onPress={() =>
+                                toggleCoin({
+                                    market: item.market,
+                                    symbol: item.symbol,
+                                    koreanName: item.koreanName,
+                                    currentPrice: item.price,
+                                })
+                            }
+                            className="ml-3 flex-1 flex-row items-center">
+                            <View className="h-11 w-11 items-center justify-center rounded-full bg-[#11B5D0]">
+                                <Text className="font-pretendard-bold text-sm text-white">
+                                    {item.symbol.slice(0, 1)}
+                                </Text>
+                            </View>
+                            <View className="ml-3 flex-1">
+                                <Text
+                                    numberOfLines={1}
+                                    className="font-pretendard-bold text-base text-[#111827]">
+                                    {item.koreanName}
+                                </Text>
+                                <Text
+                                    numberOfLines={1}
+                                    className="mt-0.5 font-pretendard-medium text-xs text-[#6B7280]">
+                                    {item.symbol} · ₩{item.price.toLocaleString("ko-KR")}
+                                </Text>
+                            </View>
+                        </Pressable>
+                    </View>
+
+                    {selectedCoin && (
+                        <View className="mt-4 flex-row items-center">
+                            <Pressable
+                                onPress={() => changeAllocation(item.market, -1)}
+                                accessibilityLabel={`${item.koreanName} 비중 줄이기`}
+                                className="h-9 w-9 items-center justify-center rounded-full bg-white active:bg-[#E5E9F0]">
+                                <Text className="font-pretendard-bold text-xl text-[#0F6BFF]">
+                                    −
+                                </Text>
+                            </Pressable>
+
+                            <View className="mx-3 h-2 flex-1 overflow-hidden rounded-full bg-white">
+                                <View
+                                    className="h-full rounded-full bg-[#0F6BFF]"
+                                    style={{ width: `${selectedCoin.allocation}%` }}
+                                />
+                            </View>
+
+                            <Pressable
+                                onPress={() => changeAllocation(item.market, 1)}
+                                accessibilityLabel={`${item.koreanName} 비중 늘리기`}
+                                className="h-9 w-9 items-center justify-center rounded-full bg-white active:bg-[#E5E9F0]">
+                                <Text className="font-pretendard-bold text-xl text-[#0F6BFF]">
+                                    +
+                                </Text>
+                            </Pressable>
+
+                            <AllocationInput
+                                market={item.market}
+                                coinName={item.koreanName}
+                                allocation={selectedCoin.allocation}
+                                onChange={setAllocation}
                             />
                         </View>
+                    )}
 
-                        <Pressable
-                            onPress={() => changeAllocation(item.market, 1)}
-                            accessibilityLabel={`${item.koreanName} 비중 늘리기`}
-                            className="h-9 w-9 items-center justify-center rounded-full bg-white active:bg-[#E5E9F0]">
-                            <Text className="font-pretendard-bold text-xl text-[#0F6BFF]">+</Text>
-                        </Pressable>
-
-                        <AllocationInput
-                            market={item.market}
-                            coinName={item.koreanName}
-                            allocation={selectedCoin.allocation}
-                            onChange={setAllocation}
-                        />
-                    </View>
-                )}
-
-                {selectedCoin && estimate && (
-                    <View className="mt-3 flex-row items-center justify-between border-t border-white pt-3">
-                        <Text className="font-pretendard-medium text-xs text-[#6B7280]">
-                            예상 투자금 {formatWon(estimate.investmentAmount)}
-                        </Text>
-                        <Text className="font-pretendard-semibold text-xs text-[#0F6BFF]">
-                            약 {formatCoinQuantity(estimate.quantity)} {selectedCoin.symbol} 예상
-                            구매
-                        </Text>
-                    </View>
-                )}
+                    {selectedCoin && estimate && (
+                        <View className="mt-3 flex-row items-center justify-between border-t border-white pt-3">
+                            <Text className="font-pretendard-medium text-xs text-[#6B7280]">
+                                예상 투자금 {formatWon(estimate.investmentAmount)}
+                            </Text>
+                            <Text className="font-pretendard-semibold text-xs text-[#0F6BFF]">
+                                약 {formatCoinQuantity(estimate.quantity)} {selectedCoin.symbol}{" "}
+                                예상 구매
+                            </Text>
+                        </View>
+                    )}
             </View>
         );
     };
@@ -280,80 +284,82 @@ function PortfolioCoins() {
                         </Pressable>
                     </View>
                 ) : (
-                    <FlatList
-                        data={filteredCoins}
-                        keyExtractor={item => item.market}
-                        renderItem={renderCoin}
-                        keyboardShouldPersistTaps="handled"
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 28 }}
-                        ListHeaderComponent={
-                            <View className="pt-5">
-                                <Text className="text-center font-pretendard-medium text-lg leading-7 text-[#6B7280]">
-                                    원하는 코인을 선택하고{"\n"}투자 비율을 설정하세요
-                                </Text>
+                    <ScrollView>
+                        <FlatList
+                            data={filteredCoins}
+                            keyExtractor={item => item.market}
+                            renderItem={renderCoin}
+                            keyboardShouldPersistTaps="handled"
+                            showsVerticalScrollIndicator={false}
+                            contentContainerStyle={{ paddingHorizontal: 20, paddingBottom: 28 }}
+                            ListHeaderComponent={
+                                <View className="pt-5">
+                                    <Text className="text-center font-pretendard-medium text-lg leading-7 text-[#6B7280]">
+                                        원하는 코인을 선택하고{"\n"}투자 비율을 설정하세요
+                                    </Text>
 
-                                <PortfolioStepIndicator activeStep={2} />
+                                    <PortfolioStepIndicator activeStep={2} />
 
-                                <View className="mb-5 mt-6 h-14 flex-row items-center rounded-full border border-[#A7B0BE] bg-white px-4">
-                                    <Text className="font-pretendard-regular text-2xl text-[#6B7280]">
+                                    <View className="mb-5 mt-6 h-14 flex-row items-center rounded-full border border-[#A7B0BE] bg-white px-4">
+                                        <Text className="font-pretendard-regular text-2xl text-[#6B7280]">
+                                            ⌕
+                                        </Text>
+                                        <TextInput
+                                            value={keyword}
+                                            onChangeText={setKeyword}
+                                            placeholder="코인검색(예: 비트코인, btc)"
+                                            placeholderTextColor="#A7B0BE"
+                                            autoCapitalize="none"
+                                            autoCorrect={false}
+                                            className="ml-2 flex-1 font-pretendard-medium text-sm text-[#111827]"
+                                        />
+                                        {keyword.length > 0 && (
+                                            <Pressable onPress={() => setKeyword("")} hitSlop={8}>
+                                                <Text className="font-pretendard-bold text-xl text-[#A7B0BE]">
+                                                    ×
+                                                </Text>
+                                            </Pressable>
+                                        )}
+                                    </View>
+                                </View>
+                            }
+                            ListEmptyComponent={
+                                <View className="items-center py-16">
+                                    <Text className="font-pretendard-regular text-4xl text-[#A7B0BE]">
                                         ⌕
                                     </Text>
-                                    <TextInput
-                                        value={keyword}
-                                        onChangeText={setKeyword}
-                                        placeholder="코인검색(예: 비트코인, btc)"
-                                        placeholderTextColor="#A7B0BE"
-                                        autoCapitalize="none"
-                                        autoCorrect={false}
-                                        className="ml-2 flex-1 font-pretendard-medium text-sm text-[#111827]"
-                                    />
-                                    {keyword.length > 0 && (
-                                        <Pressable onPress={() => setKeyword("")} hitSlop={8}>
-                                            <Text className="font-pretendard-bold text-xl text-[#A7B0BE]">
-                                                ×
-                                            </Text>
-                                        </Pressable>
-                                    )}
+                                    <Text className="mt-3 font-pretendard-medium text-sm text-[#6B7280]">
+                                        검색 결과가 없습니다.
+                                    </Text>
                                 </View>
-                            </View>
-                        }
-                        ListEmptyComponent={
-                            <View className="items-center py-16">
-                                <Text className="font-pretendard-regular text-4xl text-[#A7B0BE]">
-                                    ⌕
-                                </Text>
-                                <Text className="mt-3 font-pretendard-medium text-sm text-[#6B7280]">
-                                    검색 결과가 없습니다.
-                                </Text>
-                            </View>
-                        }
-                        ListFooterComponent={
-                            <View className="mt-2 flex-row items-center justify-between rounded-2xl border border-[#E5E9F0] bg-white px-4 py-4">
-                                <View>
-                                    <Text className="font-pretendard-bold text-base text-[#6B7280]">
-                                        전체비율
-                                    </Text>
-                                    <Text className="mt-1 font-pretendard-medium text-xs text-[#A7B0BE]">
-                                        {coins.length}개 자산 선택
-                                    </Text>
-                                    {totalAllocation !== 100 && (
-                                        <Text className="mt-1 font-pretendard-medium text-xs text-[#EF4444]">
-                                            다음 단계는 합계 100%일 때 진행할 수 있어요.
+                            }
+                            ListFooterComponent={
+                                <View className="mt-2 flex-row items-center justify-between rounded-2xl border border-[#E5E9F0] bg-white px-4 py-4">
+                                    <View>
+                                        <Text className="font-pretendard-bold text-base text-[#6B7280]">
+                                            전체비율
                                         </Text>
-                                    )}
+                                        <Text className="mt-1 font-pretendard-medium text-xs text-[#A7B0BE]">
+                                            {coins.length}개 자산 선택
+                                        </Text>
+                                        {totalAllocation !== 100 && (
+                                            <Text className="mt-1 font-pretendard-medium text-xs text-[#EF4444]">
+                                                다음 단계는 합계 100%일 때 진행할 수 있어요.
+                                            </Text>
+                                        )}
+                                    </View>
+                                    <Text
+                                        className={`font-pretendard-bold text-xl ${
+                                            totalAllocation === 100
+                                                ? "text-[#0F6BFF]"
+                                                : "text-[#EF4444]"
+                                        }`}>
+                                        {totalAllocation}%
+                                    </Text>
                                 </View>
-                                <Text
-                                    className={`font-pretendard-bold text-xl ${
-                                        totalAllocation === 100
-                                            ? "text-[#0F6BFF]"
-                                            : "text-[#EF4444]"
-                                    }`}>
-                                    {totalAllocation}%
-                                </Text>
-                            </View>
-                        }
-                    />
+                            }
+                        />
+                    </ScrollView>
                 )}
             </View>
 

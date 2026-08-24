@@ -156,7 +156,7 @@ function PortfolioListPage() {
             )}
 
             <View
-                className="absolute bottom-4 left-5 right-5 self-center"
+                className="absolute bottom-4 left-1/2 -translate-x-1/2 w-full self-center"
                 style={{ maxWidth: 560 }}>
                 <Button onPress={() => router.push("/user/portfolio/create" as Href)}>
                     포트폴리오 만들기

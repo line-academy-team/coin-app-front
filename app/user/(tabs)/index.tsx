@@ -171,7 +171,14 @@ function DashboardPage() {
                                 </Text>
                                 <Image
                                     source={require("@/assets/images/welcome/a7b6abd48871456077a8818d2955ed94772f99ec.png")}
-                                    className="absolute -bottom-4 -right-4 h-36 w-36"
+                                    style={{
+                                        position: "absolute",
+                                        bottom: 25,
+                                        right: 15,
+                                        width: 158,
+                                        height: 105,
+                                        zIndex: 10,
+                                    }}
                                     resizeMode="contain"
                                 />
                             </View>
@@ -259,7 +266,7 @@ function DashboardPage() {
             </ScrollView>
 
             <View
-                className="absolute bottom-4 left-5 right-5 self-center"
+                className="absolute bottom-4 left-1/2 -translate-x-1/2 w-full self-center"
                 style={{ maxWidth: 560 }}>
                 <Button onPress={() => router.push("/user/portfolio/create" as Href)}>
                     + 포트폴리오 만들기
