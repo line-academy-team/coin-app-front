@@ -3,7 +3,7 @@ import { Href, router } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useEffect, useMemo, useState } from "react";
 
-import { getCoins } from "@/api/coinApi";
+import { getCoinIconUrl, getCoins } from "@/api/coinApi";
 import { Coin } from "@/types/coin";
 import MainHeader from "@/components/layout/MainHeader";
 
@@ -16,7 +16,7 @@ function CoinIcon({ symbol }: CoinIconProps) {
 
     const upperSymbol = symbol.toUpperCase();
 
-    const iconUrl = `https://static.upbit.com/logos/${upperSymbol}.png`;
+    const iconUrl = getCoinIconUrl(upperSymbol);
 
     return (
         <View

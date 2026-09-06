@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Image, Text, View } from "react-native";
+import { getCoinIconUrl } from "@/api/coinApi";
 
 interface CoinAvatarProps {
     symbol: string;
@@ -13,7 +14,7 @@ function CoinAvatar({ symbol, size = 44 }: CoinAvatarProps) {
     if (!hasError) {
         return (
             <Image
-                source={{ uri: `https://static.upbit.com/logos/${upperSymbol}.png` }}
+                source={{ uri: getCoinIconUrl(upperSymbol) }}
                 style={{ width: size, height: size }}
                 resizeMode="contain"
                 onError={() => setHasError(true)}

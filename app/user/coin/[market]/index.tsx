@@ -63,14 +63,14 @@ function CoinDetailPage() {
                         previous
                             ? {
                                   ...previous,
-                                  price: ticker.trade_price,
-                                  changePrice: ticker.signed_change_price,
-                                  changeRate: ticker.signed_change_rate * 100,
-                                  openingPrice: ticker.opening_price,
-                                  highPrice: ticker.high_price,
-                                  lowPrice: ticker.low_price,
-                                  tradePrice24h: ticker.acc_trade_price_24h,
-                                  tradeVolume24h: ticker.acc_trade_volume_24h,
+                                  price: ticker.price,
+                                  changePrice: ticker.changePrice,
+                                  changeRate: ticker.changeRate,
+                                  openingPrice: ticker.openingPrice,
+                                  highPrice: ticker.highPrice,
+                                  lowPrice: ticker.lowPrice,
+                                  tradePrice24h: ticker.tradePrice24h,
+                                  tradeVolume24h: ticker.tradeVolume24h,
                                   timestamp: ticker.timestamp,
                               }
                             : previous,
@@ -81,7 +81,7 @@ function CoinDetailPage() {
                             {
                                 timestamp: ticker.timestamp,
                                 time: formatTime(ticker.timestamp),
-                                price: ticker.trade_price,
+                                price: ticker.price,
                             },
                         ].slice(-60),
                     );
